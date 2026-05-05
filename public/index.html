@@ -514,27 +514,64 @@
 
   .response-label {
     font-family: 'IM Fell English SC', serif;
-    font-size: 1.05rem;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    margin-bottom: 12px;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    margin-bottom: 14px;
     text-transform: uppercase;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--paper-shadow);
   }
   .response-option.chosen .response-label { color: var(--brass-bright); }
 
-  .response-text {
-    line-height: 1.7;
-    font-size: 1.1rem;
+  /* Lines — the prominent headline. What Cy says or does. */
+  .response-lines {
+    margin-bottom: 14px;
+  }
+  .response-line {
+    font-size: 1.2rem;
+    line-height: 1.5;
     color: var(--ink);
+    margin-bottom: 6px;
+    font-family: 'IM Fell English', serif;
+  }
+  .response-line:last-child { margin-bottom: 0; }
+  .response-line.dialogue {
+    font-style: normal;
+  }
+  .response-line.action {
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 1.1rem;
+  }
+
+  /* Text — the prose context, demoted */
+  .response-text {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--paper-shadow);
+    line-height: 1.6;
+    font-size: 0.92rem;
+    color: var(--ink-faded);
+    font-style: italic;
   }
 
   .response-cost {
-    margin-top: 14px;
-    padding-top: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px dashed var(--paper-shadow);
     font-style: italic;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     color: var(--ink-faded);
+  }
+  .response-cost::before {
+    content: 'Cost — ';
+    color: var(--rust);
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
   }
 
   .response-actions {
@@ -1491,11 +1528,24 @@
       const classes = ['response-option', `option-${i+1}`];
       if (isChosen) classes.push('chosen');
       if (isDimmed) classes.push('dimmed');
+
+      // Render lines array (the new headline format)
+      const linesArr = Array.isArray(o.lines) && o.lines.length > 0 ? o.lines : (o.text ? [o.text] : []);
+      const linesHtml = linesArr.map(line => {
+        const trimmed = (line || '').trim();
+        const isDialogue = /^["'"\u201c]/.test(trimmed);
+        const cls = isDialogue ? 'dialogue' : 'action';
+        return `<div class="response-line ${cls}">${escapeHtml(trimmed)}</div>`;
+      }).join('');
+
+      const textHtml = o.text ? `<div class="response-text">${escapeHtml(o.text)}</div>` : '';
+
       return `
         <div class="${classes.join(' ')}" data-i="${i}">
           <div class="response-label">${escapeHtml(o.label)}</div>
-          <div class="response-text">${escapeHtml(o.text)}</div>
-          <div class="response-cost">Cost — ${escapeHtml(o.cost)}</div>
+          <div class="response-lines">${linesHtml}</div>
+          ${textHtml}
+          <div class="response-cost">${escapeHtml(o.cost)}</div>
           <div class="response-actions" id="actions-${i}">
             ${isChosen
               ? `<span class="saved-indicator">✓ Saved</span>${state.currentResponse.savedNote ? `<span class="saved-note">"${escapeHtml(state.currentResponse.savedNote)}"</span>` : ''}`
@@ -1532,12 +1582,19 @@
     if (!state.currentResponse || !supabase) return;
     const { scene, options } = state.currentResponse;
     const opt = options[i];
+    // Combine lines + text for the saved record so future Ask the Tide context has the full picture
+    const linesPart = Array.isArray(opt.lines) && opt.lines.length > 0
+      ? opt.lines.join(' / ')
+      : '';
+    const fullText = linesPart && opt.text
+      ? `${linesPart}\n\n${opt.text}`
+      : (linesPart || opt.text || '');
     setStatus('Saving moment', 'syncing');
     try {
       const { error } = await supabase.from('moments').insert({
         scene,
         chosen_label: opt.label,
-        chosen_text: opt.text,
+        chosen_text: fullText,
         chosen_cost: opt.cost,
         what_happened: whatHappened || null,
       });
@@ -1545,7 +1602,6 @@
       state.currentResponse.savedIndex = i;
       state.currentResponse.savedNote = whatHappened;
       renderCurrentResponse();
-      // Reload moments list
       const { data } = await supabase.from('moments').select('*').order('created_at', { ascending: false });
       state.moments = data || [];
       renderMoments();
