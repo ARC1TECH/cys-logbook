@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cy's Logbook</title>
+<link rel="icon" type="image/png" href="/cy-portrait.png" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Special+Elite&display=swap');
+
+  :root {
+    --paper: #e8d9b8;
+    --paper-dark: #d4c19a;
+    --paper-shadow: #b89f73;
+    --ink: #2a1f15;
+    --ink-faded: #5c4a37;
+    --rust: #8b3a2a;
+    --brass: #a87932;
+    --brine: #2c4a52;
+    --seafoam: #4a6b6b;
+    --blood: #6b1f15;
+    --sea-deep: #1a2a30;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: 'IM Fell English', serif;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(139,58,42,0.08), transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(44,74,82,0.12), transparent 50%),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-dark) 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    opacity: 0.18;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+    position: relative;
+    z-index: 2;
+  }
+  @media (min-width: 768px) {
+    .container { padding: 32px 24px 80px; }
+  }
+
+  /* === STATUS BAR === */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(232,217,184,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--paper-shadow);
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    color: var(--ink-faded);
+    font-family: 'Special Elite', monospace;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: -24px -16px 16px;
+  }
+  @media (min-width: 768px) {
+    .status-bar { margin: -32px -24px 24px; }
+  }
+  .sync-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--seafoam);
+    margin-right: 6px;
+    transition: background 0.3s;
+  }
+  .sync-dot.syncing { background: var(--brass); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--blood); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* === HEADER === */
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  @media (min-width: 700px) {
+    header {
+      grid-template-columns: 180px 1fr;
+      text-align: left;
+      align-items: center;
+      gap: 28px;
+    }
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .portrait {
+    width: 140px; height: 140px;
+    border: 3px solid var(--ink);
+    box-shadow:
+      inset 0 0 30px rgba(42,31,21,0.4),
+      4px 5px 12px rgba(42,31,21,0.3);
+    overflow: hidden;
+    position: relative;
+    background: var(--ink);
+    justify-self: center;
+  }
+  @media (min-width: 700px) {
+    .portrait { width: 180px; height: 180px; }
+  }
+  .portrait img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    filter: sepia(0.15) contrast(1.05);
+  }
+  .portrait::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 40px rgba(42,31,21,0.5);
+    pointer-events: none;
+  }
+
+  .header-content { min-width: 0; }
+  .title-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  @media (min-width: 700px) { .title-row { justify-content: flex-start; } }
+
+  h1 {
+    font-family: 'IM Fell English SC', serif;
+    font-size: clamp(1.8rem, 6vw, 3.2rem);
+    font-weight: normal;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .subtitle { font-style: italic; color: var(--ink-faded); font-size: 1rem; }
+  .meta-line {
+    margin-top: 14px;
+    display: flex; gap: 18px; flex-wrap: wrap;
+    font-size: 0.88rem;
+    color: var(--ink-faded);
+    justify-content: center;
+  }
+  @media (min-width: 700px) { .meta-line { justify-content: flex-start; } }
+  .meta-line span strong {
+    color: var(--ink);
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+  }
+
+  /* === TABS === */
+  nav.tabs {
+    display: flex; gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--ink-faded);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: none; border: none;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    color: var(--ink-faded);
+    padding: 12px 16px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  @media (min-width: 768px) {
+    .tab { font-size: 1rem; padding: 12px 22px; letter-spacing: 0.08em; }
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--ink); border-bottom-color: var(--rust); }
+
+  .panel { display: none; animation: fade 0.3s ease; }
+  .panel.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; gap: 20px; } }
+
+  .card {
+    background: linear-gradient(180deg, rgba(255,253,245,0.4), rgba(184,159,115,0.15));
+    border: 1px solid var(--paper-shadow);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 2px 3px 8px rgba(42,31,21,0.12);
+    position: relative;
+  }
+  @media (min-width: 768px) { .card { padding: 22px 24px; } }
+
+  .card-title {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--paper-shadow);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .card-title .badge {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.68rem;
+    background: var(--ink); color: var(--paper);
+    padding: 2px 8px;
+    letter-spacing: 0.05em;
+  }
+  .card p { line-height: 1.6; margin-bottom: 8px; font-size: 1rem; }
+  .card ul { margin-left: 18px; line-height: 1.7; }
+  .card li { margin-bottom: 6px; }
+
+  /* === STATS === */
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    margin: 14px 0;
+  }
+  @media (min-width: 600px) { .stats { grid-template-columns: repeat(6, 1fr); gap: 8px; } }
+  .stat {
+    text-align: center;
+    border: 1px solid var(--paper-shadow);
+    padding: 10px 4px;
+    background: rgba(255,253,245,0.3);
+  }
+  .stat-name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faded);
+  }
+  .stat-val { font-family: 'Special Elite', monospace; font-size: 1.4rem; color: var(--ink); margin: 2px 0; }
+  .stat-mod { font-size: 0.78rem; color: var(--rust); }
+
+  /* === COMBAT === */
+  .combat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  @media (min-width: 600px) { .combat-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
+  .combat-stat {
+    text-align: center;
+    padding: 10px 6px;
+    background: rgba(42,31,21,0.06);
+    border: 1px solid var(--paper-shadow);
+  }
+  .combat-label {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+  .combat-val {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.4rem;
+    color: var(--rust);
+    margin-top: 4px;
+  }
+
+  .weapon-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 12px 14px;
+    border: 1px solid var(--paper-shadow);
+    margin-bottom: 8px;
+    background: rgba(255,253,245,0.3);
+  }
+  @media (min-width: 600px) {
+    .weapon-row { grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; }
+  }
+  .weapon-name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+  }
+  .weapon-detail {
+    font-size: 0.82rem;
+    color: var(--ink-faded);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .weapon-stat {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.92rem;
+    color: var(--rust);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .weapon-stat-label {
+    font-size: 0.62rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .skill-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  @media (min-width: 600px) { .skill-list { grid-template-columns: repeat(2, 1fr); } }
+  .skill {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 12px;
+    background: rgba(255,253,245,0.3);
+    border-left: 2px solid var(--brass);
+    font-size: 0.92rem;
+  }
+  .skill-mod {
+    font-family: 'Special Elite', monospace;
+    color: var(--rust);
+  }
+
+  .gear-list { font-size: 0.92rem; line-height: 1.8; }
+  .gear-list strong {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--rust);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+  .gear-list strong:first-child { margin-top: 0; }
+
+  /* === FOLK / NPCS === */
+  .npc {
+    border-left: 3px solid var(--paper-shadow);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: rgba(255,253,245,0.25);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .npc:hover { background: rgba(255,253,245,0.5); border-left-color: var(--rust); }
+  .npc:active { background: rgba(255,253,245,0.6); }
+  .npc-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 4px; gap: 10px; flex-wrap: wrap;
+  }
+  .npc-name { font-family: 'IM Fell English SC', serif; font-size: 1.05rem; letter-spacing: 0.04em; }
+  .npc-tag {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.66rem;
+    padding: 2px 8px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tag-avoid { background: var(--blood); color: var(--paper); }
+  .tag-owe { background: var(--rust); color: var(--paper); }
+  .tag-owed { background: var(--brass); color: var(--ink); }
+  .tag-ally { background: var(--seafoam); color: var(--paper); }
+  .tag-cold { background: var(--ink-faded); color: var(--paper); }
+  .tag-dead { background: var(--ink); color: var(--paper); }
+  .tag-complicated { background: var(--brine); color: var(--paper); }
+  .npc-detail { font-size: 0.92rem; color: var(--ink-faded); font-style: italic; line-height: 1.5; }
+
+  /* === FACTIONS === */
+  .faction {
+    padding: 14px 16px;
+    border: 1px solid var(--paper-shadow);
+    margin-bottom: 10px;
+    background: rgba(255,253,245,0.3);
+  }
+  .faction-name { font-family: 'IM Fell English SC', serif; font-size: 1.02rem; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .standing { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .standing-bar { flex: 1; height: 6px; background: var(--paper-shadow); position: relative; }
+  .standing-fill { height: 100%; background: linear-gradient(90deg, var(--rust), var(--brass)); transition: width 0.3s; }
+  .standing-label { font-family: 'Special Elite', monospace; font-size: 0.75rem; color: var(--ink-faded); min-width: 80px; text-align: right; }
+
+  /* === THREADS === */
+  .thread {
+    padding: 14px 14px 14px 38px;
+    border: 1px solid var(--paper-shadow);
+    margin-bottom: 10px;
+    background: rgba(255,253,245,0.3);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .thread:hover { background: rgba(255,253,245,0.5); }
+  .thread::before {
+    content: '※';
+    position: absolute;
+    left: 12px; top: 12px;
+    color: var(--rust);
+    font-size: 1.2rem;
+  }
+  .thread-title { font-family: 'IM Fell English SC', serif; font-size: 1rem; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .thread-status {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.66rem;
+    color: var(--rust);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .thread-detail { font-size: 0.92rem; line-height: 1.5; color: var(--ink-faded); font-style: italic; }
+
+  /* === ORACLE === */
+  .oracle-intro {
+    font-style: italic;
+    color: var(--ink-faded);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    padding: 14px 18px;
+    border-left: 3px solid var(--rust);
+    background: rgba(139,58,42,0.05);
+    font-size: 0.95rem;
+  }
+
+  textarea, input, select {
+    width: 100%;
+    background: rgba(255,253,245,0.5);
+    border: 1px solid var(--paper-shadow);
+    padding: 12px 14px;
+    font-family: 'IM Fell English', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    resize: vertical;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  textarea:focus, input:focus, select:focus {
+    outline: none;
+    border-color: var(--rust);
+    background: rgba(255,253,245,0.8);
+  }
+
+  button.primary {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  button.primary:hover { background: var(--rust); }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  button.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    padding: 12px 24px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  button.secondary:hover { background: var(--ink); color: var(--paper); }
+
+  .oracle-response { margin-top: 24px; }
+  .response-option {
+    border: 1px solid var(--paper-shadow);
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    background: rgba(255,253,245,0.4);
+    position: relative;
+    border-left: 4px solid var(--brass);
+  }
+  .response-option.option-1 { border-left-color: var(--seafoam); }
+  .response-option.option-2 { border-left-color: var(--rust); }
+  .response-option.option-3 { border-left-color: var(--blood); }
+  .response-label {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+  .response-text { line-height: 1.6; font-size: 0.98rem; }
+  .response-cost {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--paper-shadow);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--ink-faded);
+  }
+
+  .loading {
+    font-family: 'Special Elite', monospace;
+    color: var(--ink-faded);
+    text-align: center;
+    padding: 30px;
+    font-style: italic;
+  }
+  .loading::after { content: '...'; animation: dots 1.5s steps(4, end) infinite; }
+  @keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+  }
+
+  /* === RECAPS === */
+  .recap-card {
+    border: 1px solid var(--paper-shadow);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    background: rgba(255,253,245,0.35);
+    border-left: 4px solid var(--seafoam);
+  }
+  .recap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .recap-session {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+  }
+  .recap-date {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+  }
+  .recap-text {
+    line-height: 1.65;
+    font-size: 0.96rem;
+    white-space: pre-wrap;
+  }
+  .recap-highlights {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--paper-shadow);
+    font-style: italic;
+    color: var(--ink-faded);
+    white-space: pre-wrap;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .suggested-update {
+    padding: 10px 14px;
+    margin: 8px 0;
+    background: rgba(168,121,50,0.1);
+    border-left: 3px solid var(--brass);
+    font-size: 0.92rem;
+  }
+  .suggested-update strong {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--rust);
+    text-transform: uppercase;
+  }
+  .update-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 8px 0;
+    padding: 10px 12px;
+    background: rgba(255,253,245,0.3);
+    border-left: 2px solid var(--seafoam);
+    cursor: pointer;
+  }
+  .update-checkbox input[type="checkbox"] {
+    width: auto;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .update-checkbox-label { flex: 1; font-size: 0.9rem; line-height: 1.4; }
+
+  /* === LOG === */
+  .log-entry { border-bottom: 1px dashed var(--paper-shadow); padding: 12px 0; }
+  .log-entry:last-child { border-bottom: none; }
+  .log-date {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.74rem;
+    color: var(--rust);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .log-text { line-height: 1.6; font-size: 0.95rem; }
+
+  /* === DRAWER === */
+  .drawer-bg {
+    position: fixed; inset: 0;
+    background: rgba(26,42,48,0.6);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 16px;
+  }
+  .drawer-bg.open { display: flex; }
+  .drawer {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 22px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .drawer h3 {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .drawer label {
+    display: block;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faded);
+    margin: 12px 0 4px;
+  }
+  .drawer-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .drawer-actions button { flex: 1; padding: 12px 16px; }
+
+  .add-btn {
+    background: transparent;
+    border: 1px dashed var(--ink-faded);
+    color: var(--ink-faded);
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  .add-btn:hover { border-color: var(--rust); color: var(--rust); }
+
+  .flourish {
+    text-align: center;
+    color: var(--ink-faded);
+    font-size: 1.2rem;
+    margin: 24px 0;
+    letter-spacing: 0.5em;
+  }
+
+  .pull-quote {
+    font-style: italic;
+    color: var(--ink-faded);
+    border-left: 3px solid var(--brass);
+    padding: 8px 14px;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+
+  .possession {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: rgba(168,121,50,0.08);
+    border: 1px solid var(--paper-shadow);
+    border-left: 3px solid var(--brass);
+  }
+  .possession-name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.98rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .possession-meaning {
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 22px;
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.08em;
+    font-size: 0.88rem;
+    z-index: 200;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px);
+  }
+  .toast.error { background: var(--blood); }
+
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--ink-faded);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="status-bar">
+    <span><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></span>
+    <span style="display: flex; gap: 14px; align-items: center;">
+      <span id="spend-indicator" style="font-size: 0.74rem; color: var(--ink-faded);" title="Today's API spend">—</span>
+      <a href="/api/export-context" target="_blank" style="color: var(--ink-faded); text-decoration: none; border-bottom: 1px dotted;">Export</a>
+    </span>
+  </div>
+
+  <header>
+    <div class="portrait">
+      <img src="/cy-portrait.png" alt="Captain Silas Pike" />
+    </div>
+    <div class="header-content">
+      <div class="title-row">
+        <h1>Cy's Logbook</h1>
+        <span class="subtitle">— a story companion —</span>
+      </div>
+      <div class="meta-line">
+        <span><strong>Captain</strong> Silas Pike, "Cy"</span>
+        <span><strong>Town</strong> Saltmarsh</span>
+        <span><strong>Class</strong> Barbarian</span>
+        <span><strong>Background</strong> Sailor</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="character">The Man</button>
+    <button class="tab" data-tab="loadout">Loadout</button>
+    <button class="tab" data-tab="people">Folk</button>
+    <button class="tab" data-tab="threads">Threads</button>
+    <button class="tab" data-tab="factions">Saltmarsh</button>
+    <button class="tab" data-tab="oracle">Ask the Tide</button>
+    <button class="tab" data-tab="recaps">Recaps</button>
+    <button class="tab" data-tab="history">The Past</button>
+    <button class="tab" data-tab="log">Log</button>
+  </nav>
+
+  <!-- ============ THE MAN ============ -->
+  <section class="panel active" id="character">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">The Cut of Him</div>
+        <p>Six-foot-seven, three-twenty-five. 55 years old. Mottled, leathered skin. Piercing black eyes. Dark hair gone grey at the temples. Beard kept short — long ones catch on rope.</p>
+        <p>Wears canvas trousers, leather vest over a stained linen shirt, no armor he can't swim in. The flask on his hip, the wooden narwhal in his pocket.</p>
+        <div class="pull-quote">"Reluctant hero, quietly self-destructive, deeply competent on the water."</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">The Build <span class="badge">Lv 1</span></div>
+        <p><strong>Class:</strong> Barbarian — Berserker (lv 3)</p>
+        <p><strong>Background:</strong> Sailor</p>
+        <p><strong>Origin Feat:</strong> Tough</p>
+        <p><strong>Alignment:</strong> Neutral Good</p>
+        <div class="stats">
+          <div class="stat"><div class="stat-name">STR</div><div class="stat-val">16</div><div class="stat-mod">+3</div></div>
+          <div class="stat"><div class="stat-name">DEX</div><div class="stat-val">13</div><div class="stat-mod">+1</div></div>
+          <div class="stat"><div class="stat-name">CON</div><div class="stat-val">14</div><div class="stat-mod">+2</div></div>
+          <div class="stat"><div class="stat-name">INT</div><div class="stat-val">8</div><div class="stat-mod">−1</div></div>
+          <div class="stat"><div class="stat-name">WIS</div><div class="stat-val">14</div><div class="stat-mod">+2</div></div>
+          <div class="stat"><div class="stat-name">CHA</div><div class="stat-val">10</div><div class="stat-mod">+0</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ideals · Bonds · Flaws</div>
+      <p><strong>Personality:</strong> Brooding, reclusive, stern.</p>
+      <p style="margin-top: 8px;"><strong>Responsibility:</strong> "When lives are on the line, I act. Excuses don't keep people from drowning."</p>
+      <p><strong>Protection:</strong> "The strong are meant to shield those who can't shield themselves."</p>
+      <p style="margin-top: 8px;"><strong>Bond:</strong> Douglas Barker's compass. <em>It always seems to know when bad weather is coming.</em></p>
+      <p style="margin-top: 8px;"><strong>Flaw:</strong> Trusts signs, tools, and instincts more easily than he trusts people.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">How He Lives Now</div>
+      <ul>
+        <li><strong>Roof.</strong> A small shack near the docks.</li>
+        <li><strong>Boat.</strong> A single rowboat. The keelboat went years ago, after Barker.</li>
+        <li><strong>Day work.</strong> Ferries fishermen for the Solmor fleet when Anders has need. Scraps and salvages between jobs.</li>
+        <li><strong>Night work.</strong> Bouncer at <em>The Snapping Line</em>. Trouble usually ends quickly.</li>
+        <li><strong>The carving.</strong> He whittles small wooden animals — mostly for the children of fishermen and dockworkers.</li>
+        <li><strong>Drink.</strong> Yes. Openly. No pride in it.</li>
+        <li><strong>Sleep.</strong> Never quite restful. Fog. Distant oars. A figure at the edge.</li>
+      </ul>
+    </div>
+
+    <div class="flourish">⚓ ⁕ ⚓</div>
+  </section>
+
+  <!-- ============ LOADOUT ============ -->
+  <section class="panel" id="loadout">
+    <div class="card">
+      <div class="card-title">Combat at a Glance <span class="badge">Lv 1</span></div>
+      <div class="combat-grid">
+        <div class="combat-stat"><div class="combat-label">HP</div><div class="combat-val">16</div></div>
+        <div class="combat-stat"><div class="combat-label">AC</div><div class="combat-val">13</div></div>
+        <div class="combat-stat"><div class="combat-label">Init</div><div class="combat-val">+1</div></div>
+        <div class="combat-stat"><div class="combat-label">Speed</div><div class="combat-val">30</div></div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--ink-faded); font-style: italic; margin-top: 4px;">HP from d12 + CON + Tough. AC from Unarmored Defense. Saves: STR +5, CON +4. Rage 2/long rest, +2 dmg, resistance to b/p/s while raging.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Weapons</div>
+      <div class="weapon-row">
+        <div>
+          <div class="weapon-name">Warhammer</div>
+          <div class="weapon-detail">Versatile. Mastery: <strong>Push</strong> 10 ft on hit (Lg or smaller).</div>
+        </div>
+        <div class="weapon-stat">+5<div class="weapon-stat-label">to hit</div></div>
+        <div class="weapon-stat">1d8+3 / 1d10+3<div class="weapon-stat-label">1H / 2H</div></div>
+      </div>
+      <div class="weapon-row">
+        <div>
+          <div class="weapon-name">Handaxe ×4</div>
+          <div class="weapon-detail">Light, Thrown 20/60. Mastery: <strong>Vex</strong> — advantage next attack same target.</div>
+        </div>
+        <div class="weapon-stat">+5<div class="weapon-stat-label">to hit</div></div>
+        <div class="weapon-stat">1d6+3<div class="weapon-stat-label">damage</div></div>
+      </div>
+      <div class="weapon-row">
+        <div>
+          <div class="weapon-name">Dagger</div>
+          <div class="weapon-detail">Finesse, Light, Thrown 20/60.</div>
+        </div>
+        <div class="weapon-stat">+5<div class="weapon-stat-label">to hit</div></div>
+        <div class="weapon-stat">1d4+3<div class="weapon-stat-label">damage</div></div>
+      </div>
+      <div class="weapon-row">
+        <div>
+          <div class="weapon-name">Unarmed Strike</div>
+          <div class="weapon-detail">Tavern Brawler: 1d4+3 bludgeoning, push 5 ft (1/turn), reroll 1s.</div>
+        </div>
+        <div class="weapon-stat">+5<div class="weapon-stat-label">to hit</div></div>
+        <div class="weapon-stat">1d4+3<div class="weapon-stat-label">damage</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Skills &amp; Proficiencies</div>
+      <div class="skill-list">
+        <div class="skill"><span>Acrobatics (DEX)</span><span class="skill-mod">+3</span></div>
+        <div class="skill"><span>Athletics (STR)</span><span class="skill-mod">+5</span></div>
+        <div class="skill"><span>Insight (WIS)</span><span class="skill-mod">+4</span></div>
+        <div class="skill"><span>Investigation (INT)</span><span class="skill-mod">+1</span></div>
+        <div class="skill"><span>Perception (WIS)</span><span class="skill-mod">+4</span></div>
+      </div>
+      <p style="margin-top: 12px; font-size: 0.92rem;"><strong>Tools:</strong> Navigator's Tools</p>
+      <p style="font-size: 0.92rem;"><strong>Languages:</strong> Common, Goblin, Elvish</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Gear</div>
+      <div class="gear-list">
+        <strong>Weapons</strong>
+        Warhammer · 4 Handaxes · Dagger
+        <strong>On his back</strong>
+        Backpack · Bedroll · Tinderbox · 10 Torches · 10 Rations · Waterskin · Mess kit
+        <strong>Tools &amp; gear</strong>
+        Navigator's Tools · 2 coils of Rope · 2 flasks of Oil · Traveler's Clothes
+        <strong>Coin</strong>
+        77 GP
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Personal Possessions</div>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Things that aren't gear. Things that <em>mean</em> something.</p>
+
+      <div class="possession">
+        <div class="possession-name">Douglas Barker's compass</div>
+        <div class="possession-meaning">Carried since the night he didn't come back. <em>It always seems to know when bad weather is coming.</em></div>
+      </div>
+      <div class="possession">
+        <div class="possession-name">Pouch of hand-carved wooden animals</div>
+        <div class="possession-meaning">For the children of fishermen and dockworkers. The narwhal is always at the top.</div>
+      </div>
+      <div class="possession">
+        <div class="possession-name">Whittling knife</div>
+        <div class="possession-meaning">Small, sharp, oiled. The hands need work even when the man doesn't.</div>
+      </div>
+      <div class="possession">
+        <div class="possession-name">Weathered chart case &amp; coastal notes</div>
+        <div class="possession-meaning">Twenty years of his own observations. Currents, depths, the shape of fog when it comes wrong.</div>
+      </div>
+      <div class="possession">
+        <div class="possession-name">Battered tin flask</div>
+        <div class="possession-meaning">Always full. Always within reach.</div>
+      </div>
+      <div class="possession">
+        <div class="possession-name">Coil of rope</div>
+        <div class="possession-meaning">Personal, not pack. A boatman is never not carrying rope.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOLK ============ -->
+  <section class="panel" id="people">
+    <div class="card">
+      <div class="card-title">The Folk in His Orbit</div>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Tap a name to edit. Tags show how Cy stands with them.</p>
+      <div id="npc-list"><div class="empty-state">Loading...</div></div>
+      <button class="add-btn" onclick="openNpcDrawer()">+ add a soul</button>
+    </div>
+  </section>
+
+  <!-- ============ THREADS ============ -->
+  <section class="panel" id="threads">
+    <div class="card">
+      <div class="card-title">Open Threads</div>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Things unresolved. Things he's running from.</p>
+      <div id="thread-list"><div class="empty-state">Loading...</div></div>
+      <button class="add-btn" onclick="openThreadDrawer()">+ add a thread</button>
+    </div>
+  </section>
+
+  <!-- ============ FACTIONS ============ -->
+  <section class="panel" id="factions">
+    <div class="card">
+      <div class="card-title">Where He Stands</div>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Saltmarsh's three factions, plus the Council. Tap to adjust lean.</p>
+      <div id="faction-list"><div class="empty-state">Loading...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">The Wider War</div>
+      <p><strong>Keoland</strong> — the Crown to the north. Knights, taxes, a king who's never set foot in Saltmarsh. Cy has no love for it.</p>
+      <p style="margin-top: 8px;"><strong>Hold of the Sea Princes</strong> — pirate-lords across the bay. Slavers, in the old days. Smugglers and worse, now.</p>
+    </div>
+  </section>
+
+  <!-- ============ ORACLE ============ -->
+  <section class="panel" id="oracle">
+    <div class="oracle-intro">
+      Tell the tide what's happening at the table — a scene, a question, an NPC walking up — and three responses will surface, each true to who Cy is. <strong>You're the Captain. The tide's just the first mate.</strong>
+    </div>
+    <div class="card">
+      <div class="card-title">The Scene</div>
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">WHAT'S HAPPENING?</label>
+      <textarea id="scene-input" rows="4" placeholder="Eda Oweland is at the door of the Snapping Line. She wants to talk."></textarea>
+      <button class="primary" id="ask-btn" onclick="askTheTide()">Ask the Tide</button>
+    </div>
+    <div class="oracle-response" id="oracle-response"></div>
+  </section>
+
+  <!-- ============ RECAPS ============ -->
+  <section class="panel" id="recaps">
+    <div class="card">
+      <div class="card-title">New Recap</div>
+      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Paste your raw notes from the session. Get back a clean recap and suggested updates to threads &amp; NPCs.</p>
+
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">SESSION #</label>
+      <input id="recap-num" type="number" placeholder="1" style="max-width: 100px;" />
+
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">DATE</label>
+      <input id="recap-date" type="date" style="max-width: 200px;" />
+
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">RAW NOTES</label>
+      <textarea id="recap-notes" rows="8" placeholder="What happened? Who showed up? What did Cy do? Be as messy as you want — get it all down."></textarea>
+
+      <button class="primary" id="recap-btn" onclick="processRecap()">Distill the Session</button>
+
+      <div id="recap-pending" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Past Recaps</div>
+      <div id="recap-list"><div class="empty-state">No recaps yet. The campaign hasn't started.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ THE PAST ============ -->
+  <section class="panel" id="history">
+    <div class="card">
+      <div class="card-title">A Boy on the Water</div>
+      <p>Born and raised in Saltmarsh, son of a dock laborer. Cy learned to row before he learned to read.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Cy &amp; Barker</div>
+      <p>Partnered with Douglas Barker — another dockhand with similar ambitions. Started with a rowboat, worked up to a keelboat. Reliable. Practical. Well-liked among fishermen and working sailors.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Eda</div>
+      <p>A quiet thing with Eda Oweland through those years. Never public. It faded as her influence grew.</p>
+      <div class="pull-quote">She runs the Council now. They don't speak. Not the way they used to.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">The First Wreck — Twenty Years Ago</div>
+      <p>A galley wrecked offshore in unusual circumstances. Cy and Barker rowed out repeatedly through the night, saved roughly thirty crew. Local heroes.</p>
+      <p style="margin-top: 10px;">Some sailors spoke of strange fog. A vessel sighted before the wreck. The damage looked wrong. The stories were dismissed. He let it go.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">The Second Wreck — Ten Years Ago</div>
+      <p>Another ship. Same waters. The fog came in fast. Barker pushed ahead toward a drifting survivor. When Cy looked back, both were gone.</p>
+      <p>Barker was never found.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">The Dreams</div>
+      <p>Fog-bound waters. Distant oars. Barker at the edge — never close enough to speak. He calls it guilt.</p>
+      <div class="pull-quote">He may be wrong about what they are.</div>
+    </div>
+  </section>
+
+  <!-- ============ LOG ============ -->
+  <section class="panel" id="log">
+    <div class="card">
+      <div class="card-title">Quick Log</div>
+      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">One-line notes during play. Quick stuff to remember.</p>
+      <textarea id="log-input" rows="2" placeholder="..."></textarea>
+      <button class="primary" onclick="addLogEntry()">Commit to the Page</button>
+      <div style="margin-top: 20px;" id="log-list"><div class="empty-state">No entries yet.</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- DRAWERS -->
+<div class="drawer-bg" id="npc-drawer">
+  <div class="drawer">
+    <h3 id="npc-drawer-title">Add a Soul</h3>
+    <label>NAME</label>
+    <input id="npc-name" type="text" />
+    <label>STANDING</label>
+    <select id="npc-tag">
+      <option value="avoid">Avoiding</option>
+      <option value="owe">He Owes Them</option>
+      <option value="owed">They Owe Him</option>
+      <option value="ally">Ally</option>
+      <option value="cold">Cold</option>
+      <option value="complicated">Complicated</option>
+      <option value="dead">Lost</option>
+    </select>
+    <label>WHO ARE THEY?</label>
+    <textarea id="npc-detail" rows="4"></textarea>
+    <div class="drawer-actions">
+      <button class="secondary" onclick="closeNpcDrawer()">Cancel</button>
+      <button class="primary" onclick="saveNpc()">Save</button>
+    </div>
+    <button class="secondary" id="npc-delete-btn" style="width:100%; margin-top: 10px; display:none;" onclick="deleteNpc()">Delete</button>
+  </div>
+</div>
+
+<div class="drawer-bg" id="thread-drawer">
+  <div class="drawer">
+    <h3 id="thread-drawer-title">Add a Thread</h3>
+    <label>TITLE</label>
+    <input id="thread-title" type="text" />
+    <label>STATUS</label>
+    <select id="thread-status">
+      <option value="open">Open</option>
+      <option value="hot">Hot — happening now</option>
+      <option value="cold">Cold — waiting</option>
+      <option value="closed">Closed</option>
+    </select>
+    <label>DETAIL</label>
+    <textarea id="thread-detail" rows="4"></textarea>
+    <div class="drawer-actions">
+      <button class="secondary" onclick="closeThreadDrawer()">Cancel</button>
+      <button class="primary" onclick="saveThread()">Save</button>
+    </div>
+    <button class="secondary" id="thread-delete-btn" style="width:100%; margin-top: 10px; display:none;" onclick="deleteThread()">Delete</button>
+  </div>
+</div>
+
+<div class="drawer-bg" id="faction-drawer">
+  <div class="drawer">
+    <h3>Adjust Standing</h3>
+    <label>FACTION</label>
+    <input id="faction-name" type="text" readonly />
+    <label>LEAN (0-100)</label>
+    <input id="faction-lean" type="number" min="0" max="100" />
+    <label>NOTE</label>
+    <textarea id="faction-note" rows="3"></textarea>
+    <div class="drawer-actions">
+      <button class="secondary" onclick="closeFactionDrawer()">Cancel</button>
+      <button class="primary" onclick="saveFaction()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // === Configuration loaded from /api/config (server-side env vars) ===
+  let supabase = null;
+  let connectionOk = false;
+  let appSecret = '';
+
+  async function initSupabase() {
+    try {
+      const r = await fetch('/api/config');
+      if (!r.ok) throw new Error('Config endpoint failed');
+      const cfg = await r.json();
+      appSecret = cfg.appSecret || '';
+      if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+        supabase = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error('Config load failed:', e);
+      return false;
+    }
+  }
+
+  // Helper: fetch with the app secret header for AI endpoints
+  async function fetchAi(url, opts = {}) {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    };
+    if (appSecret) headers['x-app-secret'] = appSecret;
+    return fetch(url, { ...opts, headers });
+  }
+
+  // Refresh the spend indicator in the status bar
+  async function refreshSpendIndicator() {
+    try {
+      const r = await fetch('/api/usage');
+      if (!r.ok) return;
+      const data = await r.json();
+      const el = document.getElementById('spend-indicator');
+      const used = data.today.total.toFixed(2);
+      const ceiling = data.today.ceiling.toFixed(2);
+      const pct = data.today.percentUsed;
+      let color = 'var(--ink-faded)';
+      if (pct > 80) color = 'var(--blood)';
+      else if (pct > 50) color = 'var(--rust)';
+      el.style.color = color;
+      el.textContent = `$${used} / $${ceiling} today`;
+    } catch (e) {
+      // Silent fail
+    }
+  }
+
+  const state = {
+    npcs: [],
+    threads: [],
+    factions: [],
+    log: [],
+    recaps: [],
+    editingNpcId: null,
+    editingThreadId: null,
+    editingFactionId: null,
+    pendingRecap: null,
+  };
+
+  // === Status indicator ===
+  function setStatus(text, mode) {
+    document.getElementById('sync-status').textContent = text;
+    const dot = document.getElementById('sync-dot');
+    dot.className = 'sync-dot' + (mode ? ' ' + mode : '');
+  }
+
+  function showToast(msg, isError) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => { toast.className = 'toast' + (isError ? ' error' : ''); }, 3000);
+  }
+
+  // === Tabs ===
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.tab).classList.add('active');
+    });
+  });
+
+  // === Escaping ===
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // === Data loading ===
+  async function loadAll() {
+    if (!supabase) {
+      setStatus('Database not configured', 'error');
+      return;
+    }
+    setStatus('Syncing', 'syncing');
+    try {
+      const [npcs, threads, factions, log, recaps] = await Promise.all([
+        supabase.from('npcs').select('*').order('sort_order'),
+        supabase.from('threads').select('*').order('sort_order'),
+        supabase.from('factions').select('*').order('sort_order'),
+        supabase.from('log_entries').select('*').order('entry_date', { ascending: false }).order('created_at', { ascending: false }),
+        supabase.from('recaps').select('*').order('session_date', { ascending: false }),
+      ]);
+      state.npcs = npcs.data || [];
+      state.threads = threads.data || [];
+      state.factions = factions.data || [];
+      state.log = log.data || [];
+      state.recaps = recaps.data || [];
+      connectionOk = true;
+      setStatus('Synced', '');
+      renderAll();
+    } catch (e) {
+      console.error(e);
+      setStatus('Sync failed', 'error');
+      showToast('Connection failed. Check console.', true);
+    }
+  }
+
+  function renderAll() {
+    renderNpcs();
+    renderThreads();
+    renderFactions();
+    renderLog();
+    renderRecaps();
+  }
+
+  function renderNpcs() {
+    const tagLabels = {
+      avoid: 'Avoiding', owe: 'Owes Them', owed: 'Owed', ally: 'Ally',
+      cold: 'Cold', complicated: 'Complicated', dead: 'Lost'
+    };
+    const list = document.getElementById('npc-list');
+    if (state.npcs.length === 0) {
+      list.innerHTML = '<div class="empty-state">No souls tracked yet.</div>';
+      return;
+    }
+    list.innerHTML = state.npcs.map(n => `
+      <div class="npc" data-id="${n.id}">
+        <div class="npc-head">
+          <span class="npc-name">${escapeHtml(n.name)}</span>
+          <span class="npc-tag tag-${n.tag}">${tagLabels[n.tag] || n.tag}</span>
+        </div>
+        <div class="npc-detail">${escapeHtml(n.detail)}</div>
+      </div>`).join('');
+    list.querySelectorAll('.npc').forEach(el => {
+      el.addEventListener('click', () => openNpcDrawer(el.dataset.id));
+    });
+  }
+
+  function renderThreads() {
+    const list = document.getElementById('thread-list');
+    if (state.threads.length === 0) {
+      list.innerHTML = '<div class="empty-state">No threads tracked yet.</div>';
+      return;
+    }
+    list.innerHTML = state.threads.map(t => `
+      <div class="thread" data-id="${t.id}">
+        <div class="thread-status">${escapeHtml(t.status)}</div>
+        <div class="thread-title">${escapeHtml(t.title)}</div>
+        <div class="thread-detail">${escapeHtml(t.detail)}</div>
+      </div>`).join('');
+    list.querySelectorAll('.thread').forEach(el => {
+      el.addEventListener('click', () => openThreadDrawer(el.dataset.id));
+    });
+  }
+
+  function renderFactions() {
+    const list = document.getElementById('faction-list');
+    if (state.factions.length === 0) {
+      list.innerHTML = '<div class="empty-state">No factions tracked yet.</div>';
+      return;
+    }
+    list.innerHTML = state.factions.map(f => `
+      <div class="faction" data-id="${f.id}" style="cursor: pointer;">
+        <div class="faction-name">${escapeHtml(f.name)}</div>
+        <div class="npc-detail">${escapeHtml(f.note)}</div>
+        <div class="standing">
+          <div class="standing-bar"><div class="standing-fill" style="width: ${f.lean}%"></div></div>
+          <div class="standing-label">${f.lean}% lean</div>
+        </div>
+      </div>`).join('');
+    list.querySelectorAll('.faction').forEach(el => {
+      el.addEventListener('click', () => openFactionDrawer(el.dataset.id));
+    });
+  }
+
+  function renderLog() {
+    const list = document.getElementById('log-list');
+    if (state.log.length === 0) {
+      list.innerHTML = '<div class="empty-state">No entries yet.</div>';
+      return;
+    }
+    list.innerHTML = state.log.map(e => `
+      <div class="log-entry">
+        <div class="log-date">${escapeHtml(e.entry_date)}</div>
+        <div class="log-text">${escapeHtml(e.text)}</div>
+      </div>`).join('');
+  }
+
+  function renderRecaps() {
+    const list = document.getElementById('recap-list');
+    if (state.recaps.length === 0) {
+      list.innerHTML = '<div class="empty-state">No recaps yet. The campaign hasn\'t started.</div>';
+      return;
+    }
+    list.innerHTML = state.recaps.map(r => `
+      <div class="recap-card">
+        <div class="recap-header">
+          <div class="recap-session">Session ${escapeHtml(r.session_number || '?')}</div>
+          <div class="recap-date">${escapeHtml(r.session_date)}</div>
+        </div>
+        <div class="recap-text">${escapeHtml(r.recap_text)}</div>
+        ${r.highlights ? `<div class="recap-highlights">${escapeHtml(r.highlights)}</div>` : ''}
+      </div>`).join('');
+  }
+
+  // === NPC drawer ===
+  window.openNpcDrawer = function(id) {
+    state.editingNpcId = id || null;
+    document.getElementById('npc-drawer-title').textContent = id ? 'Edit Soul' : 'Add a Soul';
+    document.getElementById('npc-delete-btn').style.display = id ? 'block' : 'none';
+    if (id) {
+      const n = state.npcs.find(x => x.id === id);
+      document.getElementById('npc-name').value = n.name;
+      document.getElementById('npc-tag').value = n.tag;
+      document.getElementById('npc-detail').value = n.detail || '';
+    } else {
+      document.getElementById('npc-name').value = '';
+      document.getElementById('npc-tag').value = 'cold';
+      document.getElementById('npc-detail').value = '';
+    }
+    document.getElementById('npc-drawer').classList.add('open');
+  };
+  window.closeNpcDrawer = function() {
+    document.getElementById('npc-drawer').classList.remove('open');
+  };
+  window.saveNpc = async function() {
+    const name = document.getElementById('npc-name').value.trim();
+    if (!name) return;
+    const tag = document.getElementById('npc-tag').value;
+    const detail = document.getElementById('npc-detail').value.trim();
+    setStatus('Saving', 'syncing');
+    try {
+      if (state.editingNpcId) {
+        const { error } = await supabase.from('npcs')
+          .update({ name, tag, detail }).eq('id', state.editingNpcId);
+        if (error) throw error;
+      } else {
+        const sort_order = (state.npcs.length || 0) + 1;
+        const { error } = await supabase.from('npcs').insert({ name, tag, detail, sort_order });
+        if (error) throw error;
+      }
+      await loadAll();
+      closeNpcDrawer();
+      showToast('Saved');
+    } catch (e) {
+      console.error(e);
+      setStatus('Save failed', 'error');
+      showToast('Save failed: ' + e.message, true);
+    }
+  };
+  window.deleteNpc = async function() {
+    if (!state.editingNpcId) return;
+    if (!confirm('Delete this soul from the logbook?')) return;
+    setStatus('Deleting', 'syncing');
+    try {
+      const { error } = await supabase.from('npcs').delete().eq('id', state.editingNpcId);
+      if (error) throw error;
+      await loadAll();
+      closeNpcDrawer();
+      showToast('Removed');
+    } catch (e) {
+      console.error(e);
+      showToast('Delete failed: ' + e.message, true);
+    }
+  };
+
+  // === Thread drawer ===
+  window.openThreadDrawer = function(id) {
+    state.editingThreadId = id || null;
+    document.getElementById('thread-drawer-title').textContent = id ? 'Edit Thread' : 'Add a Thread';
+    document.getElementById('thread-delete-btn').style.display = id ? 'block' : 'none';
+    if (id) {
+      const t = state.threads.find(x => x.id === id);
+      document.getElementById('thread-title').value = t.title;
+      document.getElementById('thread-status').value = t.status;
+      document.getElementById('thread-detail').value = t.detail || '';
+    } else {
+      document.getElementById('thread-title').value = '';
+      document.getElementById('thread-status').value = 'open';
+      document.getElementById('thread-detail').value = '';
+    }
+    document.getElementById('thread-drawer').classList.add('open');
+  };
+  window.closeThreadDrawer = function() {
+    document.getElementById('thread-drawer').classList.remove('open');
+  };
+  window.saveThread = async function() {
+    const title = document.getElementById('thread-title').value.trim();
+    if (!title) return;
+    const status = document.getElementById('thread-status').value;
+    const detail = document.getElementById('thread-detail').value.trim();
+    setStatus('Saving', 'syncing');
+    try {
+      if (state.editingThreadId) {
+        const { error } = await supabase.from('threads')
+          .update({ title, status, detail }).eq('id', state.editingThreadId);
+        if (error) throw error;
+      } else {
+        const sort_order = (state.threads.length || 0) + 1;
+        const { error } = await supabase.from('threads').insert({ title, status, detail, sort_order });
+        if (error) throw error;
+      }
+      await loadAll();
+      closeThreadDrawer();
+      showToast('Saved');
+    } catch (e) {
+      console.error(e);
+      showToast('Save failed: ' + e.message, true);
+    }
+  };
+  window.deleteThread = async function() {
+    if (!state.editingThreadId) return;
+    if (!confirm('Delete this thread?')) return;
+    try {
+      const { error } = await supabase.from('threads').delete().eq('id', state.editingThreadId);
+      if (error) throw error;
+      await loadAll();
+      closeThreadDrawer();
+      showToast('Removed');
+    } catch (e) {
+      console.error(e);
+      showToast('Delete failed: ' + e.message, true);
+    }
+  };
+
+  // === Faction drawer ===
+  window.openFactionDrawer = function(id) {
+    state.editingFactionId = id;
+    const f = state.factions.find(x => x.id === id);
+    document.getElementById('faction-name').value = f.name;
+    document.getElementById('faction-lean').value = f.lean;
+    document.getElementById('faction-note').value = f.note || '';
+    document.getElementById('faction-drawer').classList.add('open');
+  };
+  window.closeFactionDrawer = function() {
+    document.getElementById('faction-drawer').classList.remove('open');
+  };
+  window.saveFaction = async function() {
+    if (!state.editingFactionId) return;
+    const lean = parseInt(document.getElementById('faction-lean').value) || 0;
+    const note = document.getElementById('faction-note').value.trim();
+    setStatus('Saving', 'syncing');
+    try {
+      const { error } = await supabase.from('factions')
+        .update({ lean: Math.max(0, Math.min(100, lean)), note }).eq('id', state.editingFactionId);
+      if (error) throw error;
+      await loadAll();
+      closeFactionDrawer();
+      showToast('Saved');
+    } catch (e) {
+      console.error(e);
+      showToast('Save failed: ' + e.message, true);
+    }
+  };
+
+  // === Log ===
+  window.addLogEntry = async function() {
+    const text = document.getElementById('log-input').value.trim();
+    if (!text) return;
+    setStatus('Saving', 'syncing');
+    try {
+      const { error } = await supabase.from('log_entries').insert({ text });
+      if (error) throw error;
+      document.getElementById('log-input').value = '';
+      await loadAll();
+      showToast('Logged');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed: ' + e.message, true);
+    }
+  };
+
+  // === Ask the Tide ===
+  window.askTheTide = async function() {
+    const scene = document.getElementById('scene-input').value.trim();
+    if (!scene) return;
+    const btn = document.getElementById('ask-btn');
+    const out = document.getElementById('oracle-response');
+    btn.disabled = true;
+    btn.textContent = 'Listening...';
+    out.innerHTML = '<div class="loading">the tide turns</div>';
+    try {
+      const r = await fetchAi('/api/ask-tide', {
+        method: 'POST',
+        body: JSON.stringify({ scene })
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || err.error || 'Request failed');
+      }
+      const data = await r.json();
+      const cachedBadge = data._meta?.cached ? ' <span style="color: var(--seafoam); font-size: 0.7rem;">(cached)</span>' : '';
+      const costBadge = data._meta?.cost ? `<div style="text-align: right; font-size: 0.72rem; color: var(--ink-faded); margin-bottom: 8px;">$${data._meta.cost}${cachedBadge}</div>` : '';
+      out.innerHTML = costBadge + data.options.map((o, i) => `
+        <div class="response-option option-${i+1}">
+          <div class="response-label">${escapeHtml(o.label)}</div>
+          <div class="response-text">${escapeHtml(o.text)}</div>
+          <div class="response-cost">Cost — ${escapeHtml(o.cost)}</div>
+        </div>`).join('');
+      refreshSpendIndicator();
+    } catch (e) {
+      console.error(e);
+      out.innerHTML = `<div class="card" style="border-color: var(--blood);">
+        <div class="card-title" style="color: var(--blood);">The tide pulled back</div>
+        <p>${escapeHtml(e.message || 'Unknown error.')}</p>
+      </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Ask the Tide';
+    }
+  };
+
+  // === Recap processing ===
+  window.processRecap = async function() {
+    const notes = document.getElementById('recap-notes').value.trim();
+    const sessionNumber = parseInt(document.getElementById('recap-num').value) || null;
+    const sessionDate = document.getElementById('recap-date').value || new Date().toISOString().split('T')[0];
+    if (!notes) {
+      showToast('Need some notes first', true);
+      return;
+    }
+    const btn = document.getElementById('recap-btn');
+    const pending = document.getElementById('recap-pending');
+    btn.disabled = true;
+    btn.textContent = 'Distilling...';
+    pending.innerHTML = '<div class="loading">turning chaos into story</div>';
+    try {
+      const r = await fetchAi('/api/recap', {
+        method: 'POST',
+        body: JSON.stringify({ notes, sessionNumber, sessionDate })
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || err.error || 'Request failed');
+      }
+      const data = await r.json();
+      state.pendingRecap = { ...data, notes, sessionNumber, sessionDate };
+      renderPendingRecap();
+      refreshSpendIndicator();
+    } catch (e) {
+      console.error(e);
+      pending.innerHTML = `<div class="card" style="border-color: var(--blood);">
+        <p>${escapeHtml(e.message)}</p></div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Distill the Session';
+    }
+  };
+
+  function renderPendingRecap() {
+    const r = state.pendingRecap;
+    if (!r) return;
+    const u = r.suggested_updates || {};
+    const html = `
+      <div class="recap-card">
+        <div class="recap-header">
+          <div class="recap-session">Draft Recap — Session ${escapeHtml(r.sessionNumber || '?')}</div>
+          <div class="recap-date">${escapeHtml(r.sessionDate)}</div>
+        </div>
+        <div class="recap-text">${escapeHtml(r.recap)}</div>
+        ${r.highlights ? `<div class="recap-highlights">${escapeHtml(r.highlights)}</div>` : ''}
+      </div>
+
+      ${(u.new_npcs?.length || u.npc_changes?.length || u.new_threads?.length || u.thread_changes?.length) ? `
+      <div class="card">
+        <div class="card-title">Suggested Updates</div>
+        <p style="font-style: italic; color: var(--ink-faded); font-size: 0.9rem; margin-bottom: 12px;">Tick the ones you want applied.</p>
+
+        ${(u.new_npcs || []).map((n, i) => `
+          <label class="update-checkbox">
+            <input type="checkbox" data-type="new_npc" data-i="${i}" checked />
+            <div class="update-checkbox-label"><strong>New NPC:</strong> ${escapeHtml(n.name)} <em>[${escapeHtml(n.tag)}]</em><br><span style="color: var(--ink-faded);">${escapeHtml(n.detail)}</span></div>
+          </label>`).join('')}
+
+        ${(u.npc_changes || []).map((c, i) => `
+          <label class="update-checkbox">
+            <input type="checkbox" data-type="npc_change" data-i="${i}" checked />
+            <div class="update-checkbox-label"><strong>NPC change:</strong> ${escapeHtml(c.name)} → <em>${escapeHtml(c.new_tag)}</em><br><span style="color: var(--ink-faded);">${escapeHtml(c.reason)}</span></div>
+          </label>`).join('')}
+
+        ${(u.new_threads || []).map((t, i) => `
+          <label class="update-checkbox">
+            <input type="checkbox" data-type="new_thread" data-i="${i}" checked />
+            <div class="update-checkbox-label"><strong>New thread:</strong> ${escapeHtml(t.title)} <em>[${escapeHtml(t.status)}]</em><br><span style="color: var(--ink-faded);">${escapeHtml(t.detail)}</span></div>
+          </label>`).join('')}
+
+        ${(u.thread_changes || []).map((c, i) => `
+          <label class="update-checkbox">
+            <input type="checkbox" data-type="thread_change" data-i="${i}" checked />
+            <div class="update-checkbox-label"><strong>Thread change:</strong> ${escapeHtml(c.title)} → <em>${escapeHtml(c.new_status)}</em><br><span style="color: var(--ink-faded);">${escapeHtml(c.reason)}</span></div>
+          </label>`).join('')}
+      </div>` : ''}
+
+      <div style="display: flex; gap: 8px; margin-top: 16px;">
+        <button class="primary" onclick="commitRecap()">Save Recap &amp; Apply Selected</button>
+        <button class="secondary" onclick="discardRecap()">Discard</button>
+      </div>
+    `;
+    document.getElementById('recap-pending').innerHTML = html;
+  }
+
+  window.commitRecap = async function() {
+    const r = state.pendingRecap;
+    if (!r) return;
+    const u = r.suggested_updates || {};
+    const checks = document.querySelectorAll('#recap-pending input[type="checkbox"]');
+    setStatus('Saving', 'syncing');
+    try {
+      // 1. Save the recap itself
+      const { error: recapErr } = await supabase.from('recaps').insert({
+        session_number: r.sessionNumber,
+        session_date: r.sessionDate,
+        raw_notes: r.notes,
+        recap_text: r.recap,
+        highlights: r.highlights || null,
+      });
+      if (recapErr) throw recapErr;
+
+      // 2. Apply selected updates
+      for (const c of checks) {
+        if (!c.checked) continue;
+        const type = c.dataset.type;
+        const i = parseInt(c.dataset.i);
+        if (type === 'new_npc') {
+          const n = u.new_npcs[i];
+          await supabase.from('npcs').insert({
+            name: n.name, tag: n.tag, detail: n.detail,
+            sort_order: state.npcs.length + i + 100
+          });
+        } else if (type === 'npc_change') {
+          const c2 = u.npc_changes[i];
+          const existing = state.npcs.find(x => x.name.toLowerCase() === c2.name.toLowerCase());
+          if (existing) {
+            await supabase.from('npcs').update({ tag: c2.new_tag }).eq('id', existing.id);
+          }
+        } else if (type === 'new_thread') {
+          const t = u.new_threads[i];
+          await supabase.from('threads').insert({
+            title: t.title, status: t.status, detail: t.detail,
+            sort_order: state.threads.length + i + 100
+          });
+        } else if (type === 'thread_change') {
+          const c2 = u.thread_changes[i];
+          const existing = state.threads.find(x => x.title.toLowerCase() === c2.title.toLowerCase());
+          if (existing) {
+            await supabase.from('threads').update({ status: c2.new_status }).eq('id', existing.id);
+          }
+        }
+      }
+
+      // 3. Reset
+      state.pendingRecap = null;
+      document.getElementById('recap-notes').value = '';
+      document.getElementById('recap-num').value = '';
+      document.getElementById('recap-pending').innerHTML = '';
+      await loadAll();
+      showToast('Recap saved');
+    } catch (e) {
+      console.error(e);
+      showToast('Save failed: ' + e.message, true);
+    }
+  };
+
+  window.discardRecap = function() {
+    state.pendingRecap = null;
+    document.getElementById('recap-pending').innerHTML = '';
+  };
+
+  // === Init ===
+  // Set today's date as default for recap
+  document.getElementById('recap-date').value = new Date().toISOString().split('T')[0];
+
+  (async () => {
+    const ready = await initSupabase();
+    if (!ready) {
+      setStatus('Config not loaded', 'error');
+      showToast('Set SUPABASE_URL and SUPABASE_ANON_KEY in Vercel env vars', true);
+      return;
+    }
+    await loadAll();
+    refreshSpendIndicator();
+    // Refresh spend every 60s so it stays current if you have multiple tabs open
+    setInterval(refreshSpendIndicator, 60000);
+  })();
+</script>
+
+</body>
+</html>

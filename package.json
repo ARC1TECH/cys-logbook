@@ -1,0 +1,15 @@
+{
+  "name": "cys-logbook",
+  "version": "1.0.0",
+  "description": "A story companion for Captain Silas Pike",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
