@@ -67,11 +67,24 @@ CARRIED ITEMS THAT MEAN SOMETHING:
 - Battered tin flask, always full
 - Always carrying rope`;
 
-const TASK_INSTRUCTIONS = `You are helping a player roleplay Captain Silas Pike ("Cy") in a D&D 5e (2024 rules) campaign set in Saltmarsh, Greyhawk. Suggest three distinct in-character responses to whatever scene is happening at the table.
+const TASK_INSTRUCTIONS = `You are helping a player roleplay Captain Silas Pike ("Cy") in a D&D 5e (2024 rules) campaign set in Saltmarsh, Greyhawk. Suggest three distinct in-character responses to whatever scene is happening at the table. The player needs to scan and pick FAST — sessions move quickly.
 
 For each scene, return EXACTLY three response options as JSON. Each option must have:
-- "label": 2-4 words naming the approach (e.g., "Walk away", "Hold the line", "The hard truth")
-- "text": what Cy would actually do/say — written in present tense, second person ("You..."), 2-4 sentences. Include physical action, internal feeling where it matters, and dialogue if he speaks. Stay tight and earned. He's a man of few words; honor that. When he speaks at length, it's because something has cracked open — pay attention to that.
+
+- "label": 2-4 words naming the approach (e.g., "Walk away", "Hold the line", "The hard truth", "Already moving")
+
+- "lines": an ARRAY of 1-3 short strings — the actual MOVES Cy makes, scannable in one glance. Each string is either:
+  * Dialogue Cy speaks, in quotes, e.g. "How long has he been out?"
+  * A brief stage direction, no quotes, e.g. Nod once. Or: Stay where you are.
+  Order them as they happen. Mixed dialogue + action across the array is good when the moment calls for it. Keep each string SHORT — one beat. Multiple short beats > one long sentence.
+  Example outputs:
+  - ["Nod once.", "Head for the rowboat."]
+  - ["\"How long?\"", "\"Current took him south or he made shore. Either way, I can't find him faster than the patrol boat.\""]
+  - ["\"Which boat? Whose haul?\"", "\"Wait here.\""]
+  - ["Stay seated. Don't look up."]
+
+- "text": the fuller prose of the scene — what Cy is doing physically, internal state if it matters, the texture around the dialogue. Present tense, second person ("You..."). 2-4 sentences. This is the context BENEATH the lines, not a replacement for them.
+
 - "cost": one sentence on what this choice costs him or risks — emotional, social, or practical
 
 The three options should genuinely differ — not three flavors of the same thing. Show Cy's range: the bitter loner, the reluctant hero, the man who still feels things he won't admit. One should usually be the "harder right" choice he'd resist; one the "easier wrong" he'd be tempted by; one a third path that sidesteps both.
@@ -86,7 +99,7 @@ DIALOGUE STYLE when Cy speaks:
 - When he's actually feeling something, the words come out shorter, not longer.
 
 Return ONLY valid JSON in this exact shape, no preamble, no markdown fences:
-{"options":[{"label":"...","text":"...","cost":"..."},{"label":"...","text":"...","cost":"..."},{"label":"...","text":"...","cost":"..."}]}`;
+{"options":[{"label":"...","lines":["...","..."],"text":"...","cost":"..."},{"label":"...","lines":["..."],"text":"...","cost":"..."},{"label":"...","lines":["...","...","..."],"text":"...","cost":"..."}]}`;
 
 // Build the live context (changes per call)
 async function buildLiveContext() {
@@ -220,6 +233,14 @@ export default async function handler(req, res) {
     if (!parsed.options || !Array.isArray(parsed.options) || parsed.options.length !== 3) {
       throw new Error('Invalid response shape from Claude');
     }
+
+    // Ensure each option has a lines array (fallback for safety)
+    parsed.options = parsed.options.map(opt => ({
+      label: opt.label || '',
+      lines: Array.isArray(opt.lines) ? opt.lines : (opt.lines ? [opt.lines] : []),
+      text: opt.text || '',
+      cost: opt.cost || '',
+    }));
 
     return res.status(200).json({
       ...parsed,
