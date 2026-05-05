@@ -170,7 +170,7 @@ export default async function handler(req, res) {
     // Cached portions cost 90% less on subsequent calls within ~5 minutes.
 
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1200,
       system: [
         {
