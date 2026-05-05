@@ -116,13 +116,10 @@
     height: 1px;
     background: var(--ink);
   }
-
   .portrait {
     width: 140px; height: 140px;
     border: 3px solid var(--ink);
-    box-shadow:
-      inset 0 0 30px rgba(42,31,21,0.4),
-      4px 5px 12px rgba(42,31,21,0.3);
+    box-shadow: inset 0 0 30px rgba(42,31,21,0.4), 4px 5px 12px rgba(42,31,21,0.3);
     overflow: hidden;
     position: relative;
     background: var(--ink);
@@ -171,31 +168,45 @@
     font-size: 0.82rem;
   }
 
+  /* Nav with proper overflow handling */
+  .nav-wrap {
+    position: relative;
+    margin-bottom: 24px;
+  }
   nav.tabs {
     display: flex; gap: 0;
-    margin-bottom: 24px;
     border-bottom: 1px solid var(--ink-faded);
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    padding-right: 24px; /* room for fade */
   }
   nav.tabs::-webkit-scrollbar { display: none; }
+  /* Right-edge fade hints there's more to scroll */
+  .nav-wrap::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 1px;
+    width: 28px;
+    background: linear-gradient(to right, transparent, var(--paper-dark) 70%);
+    pointer-events: none;
+  }
   .tab {
     background: none; border: none;
     font-family: 'IM Fell English SC', serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--ink-faded);
-    padding: 12px 16px;
+    padding: 12px 14px;
     cursor: pointer;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     border-bottom: 3px solid transparent;
     margin-bottom: -1px;
     transition: all 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
   }
-  @media (min-width: 768px) {
-    .tab { font-size: 1.12rem; padding: 12px 22px; letter-spacing: 0.08em; }
+  @media (min-width: 900px) {
+    .tab { font-size: 1.05rem; padding: 12px 18px; letter-spacing: 0.07em; }
   }
   .tab:hover { color: var(--ink); }
   .tab.active { color: var(--ink); border-bottom-color: var(--rust); }
@@ -239,6 +250,234 @@
   .card ul { margin-left: 18px; line-height: 1.7; font-size: 1.05rem; }
   .card li { margin-bottom: 6px; }
 
+  /* === HELM === */
+  .helm-section { margin-bottom: 18px; }
+  .helm-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 800px) {
+    .helm-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+  }
+
+  .helm-block {
+    background: linear-gradient(180deg, rgba(255,253,245,0.4), rgba(184,159,115,0.15));
+    border: 1px solid var(--paper-shadow);
+    padding: 16px 18px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 2px 3px 8px rgba(42,31,21,0.1);
+  }
+  .helm-block-title {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--paper-shadow);
+    text-transform: uppercase;
+  }
+
+  /* Combat block */
+  .combat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .combat-cell {
+    text-align: center;
+    padding: 8px 4px;
+    background: rgba(42,31,21,0.06);
+    border: 1px solid var(--paper-shadow);
+  }
+  .combat-cell-label {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+  .combat-cell-val {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.4rem;
+    color: var(--rust);
+    margin-top: 2px;
+  }
+
+  .save-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    font-size: 0.95rem;
+  }
+  .save-pill {
+    padding: 4px 10px;
+    background: rgba(255,253,245,0.3);
+    border: 1px solid var(--paper-shadow);
+    border-left: 3px solid var(--brass);
+    font-family: 'IM Fell English', serif;
+  }
+  .save-pill strong {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faded);
+    margin-right: 6px;
+    font-weight: normal;
+  }
+  .save-pill .v {
+    font-family: 'Special Elite', monospace;
+    color: var(--rust);
+  }
+
+  .helm-weapons-list { font-size: 0.95rem; line-height: 1.6; }
+  .helm-weapon-row {
+    display: flex; justify-content: space-between; gap: 10px;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(184,159,115,0.4);
+  }
+  .helm-weapon-row:last-child { border-bottom: none; }
+  .helm-weapon-row .name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+  .helm-weapon-row .stats {
+    font-family: 'Special Elite', monospace;
+    color: var(--rust);
+    font-size: 0.92rem;
+    white-space: nowrap;
+  }
+
+  /* Resource trackers */
+  .resource-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(184,159,115,0.4);
+  }
+  .resource-row:last-child { border-bottom: none; }
+  .resource-name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    min-width: 110px;
+  }
+  .resource-pips { display: flex; gap: 6px; flex: 1; }
+  .resource-pip {
+    width: 22px; height: 22px;
+    border: 2px solid var(--brass);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-appearance: none;
+    padding: 0;
+  }
+  .resource-pip:hover { border-color: var(--brass-bright); transform: scale(1.1); }
+  .resource-pip.used {
+    background: var(--brass);
+    border-color: var(--brass);
+  }
+  .resource-pip.used:hover { background: var(--rust); border-color: var(--rust); }
+  .resource-count {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.85rem;
+    color: var(--ink-faded);
+    margin-left: auto;
+  }
+
+  .long-rest-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--seafoam);
+    color: var(--seafoam);
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  .long-rest-btn:hover { background: var(--seafoam); color: var(--paper); }
+
+  /* Action menu */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 600px) {
+    .action-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .action-section h4 {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--paper-shadow);
+  }
+  .action-section ul {
+    list-style: none;
+    margin: 0; padding: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .action-section ul li {
+    padding: 3px 0;
+    color: var(--ink);
+  }
+  .action-section ul li.note {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    padding-left: 12px;
+  }
+  .action-section ul li strong {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    font-weight: normal;
+  }
+
+  /* Hot threads / Recent moments */
+  .helm-list { font-size: 0.98rem; line-height: 1.5; }
+  .helm-list-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(184,159,115,0.4);
+  }
+  .helm-list-item:last-child { border-bottom: none; }
+  .helm-list-item .name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .helm-list-item .meta {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .helm-list-empty {
+    text-align: center;
+    color: var(--ink-faded);
+    font-style: italic;
+    padding: 14px 0;
+    font-size: 0.95rem;
+  }
+
+  /* Stats (Loadout/Man tab still uses these) */
   .stats {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
     margin: 14px 0;
@@ -332,6 +571,7 @@
   }
   .gear-list strong:first-child { margin-top: 0; }
 
+  /* NPCs / Folk */
   .npc {
     border-left: 3px solid var(--paper-shadow);
     padding: 12px 14px;
@@ -402,20 +642,7 @@
   }
   .thread-detail { font-size: 1rem; line-height: 1.5; color: var(--ink-faded); font-style: italic; }
 
-  /* === ORACLE — UPDATED FOR PROMINENCE === */
-  .oracle-intro {
-    font-style: italic;
-    color: var(--ink-faded);
-    margin-bottom: 16px;
-    line-height: 1.6;
-    padding: 14px 18px;
-    border-left: 3px solid var(--rust);
-    background: rgba(139,58,42,0.05);
-    font-size: 1.05rem;
-  }
-  /* Hide intro once a response is showing — keeps screen tight at the table */
-  .oracle-response:not(:empty) ~ .oracle-intro { display: none; }
-
+  /* Forms / inputs */
   textarea, input, select {
     width: 100%;
     background: rgba(255,253,245,0.5);
@@ -456,7 +683,7 @@
     color: var(--ink);
     border: 1px solid var(--ink);
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.92rem;
+    font-size: 1rem;
     letter-spacing: 0.1em;
     padding: 12px 24px;
     cursor: pointer;
@@ -465,8 +692,8 @@
   }
   button.secondary:hover { background: var(--ink); color: var(--paper); }
 
-  /* Response cards — bigger, more prominent */
-  .oracle-response { margin-bottom: 28px; }
+  /* === Response cards === */
+  .oracle-response { margin-bottom: 20px; }
   .oracle-response:empty { margin-bottom: 0; }
 
   .response-meta {
@@ -505,9 +732,7 @@
   .response-option.option-2 { border-left-color: var(--rust); }
   .response-option.option-3 { border-left-color: var(--blood); }
 
-  .response-option.dimmed {
-    opacity: 0.45;
-  }
+  .response-option.dimmed { opacity: 0.45; }
   .response-option.chosen {
     border-color: var(--brass-bright);
     border-left-color: var(--brass-bright);
@@ -528,7 +753,6 @@
   }
   .response-option.chosen .response-label { color: var(--brass-bright); }
 
-  /* Lines — the prominent headline. What Cy says or does. */
   .response-lines { margin-bottom: 10px; }
   .response-line {
     font-size: 1.18rem;
@@ -545,7 +769,6 @@
     font-size: 1.1rem;
   }
 
-  /* Text — the prose context, demoted but still readable */
   .response-text {
     margin-top: 10px;
     padding-top: 10px;
@@ -648,7 +871,7 @@
     80%, 100% { content: '...'; }
   }
 
-  /* Recaps */
+  /* Recap cards */
   .recap-card {
     border: 1px solid var(--paper-shadow);
     padding: 16px 18px;
@@ -759,7 +982,7 @@
   .moment-delete:hover { color: var(--blood); }
 
   /* Log */
-  .log-entry { border-bottom: 1px dashed var(--paper-shadow); padding: 12px 0; }
+  .log-entry { border-bottom: 1px dashed var(--paper-shadow); padding: 10px 0; }
   .log-entry:last-child { border-bottom: none; }
   .log-date {
     font-family: 'Special Elite', monospace;
@@ -897,6 +1120,37 @@
     font-style: italic;
     font-size: 1.05rem;
   }
+
+  .helm-quick-log {
+    display: flex; gap: 8px; align-items: stretch;
+    flex-direction: column;
+  }
+  @media (min-width: 600px) { .helm-quick-log { flex-direction: row; } }
+  .helm-quick-log textarea {
+    flex: 1; min-height: 44px; height: 44px; resize: none; padding: 10px 12px;
+  }
+  .helm-quick-log button {
+    margin-top: 0;
+    padding: 10px 20px;
+    white-space: nowrap;
+  }
+  .helm-recent-log {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--paper-shadow);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .helm-recent-log-entry {
+    padding: 4px 0;
+    line-height: 1.5;
+  }
+  .helm-recent-log-entry .date {
+    font-family: 'Special Elite', monospace;
+    color: var(--rust);
+    margin-right: 8px;
+    font-size: 0.82rem;
+  }
 </style>
 </head>
 <body>
@@ -926,21 +1180,152 @@
     </div>
   </header>
 
-  <nav class="tabs">
-    <button class="tab active" data-tab="character">The Man</button>
-    <button class="tab" data-tab="loadout">Loadout</button>
-    <button class="tab" data-tab="people">Folk</button>
-    <button class="tab" data-tab="threads">Threads</button>
-    <button class="tab" data-tab="factions">Saltmarsh</button>
-    <button class="tab" data-tab="oracle">Ask the Tide</button>
-    <button class="tab" data-tab="moments">Moments</button>
-    <button class="tab" data-tab="recaps">Recaps</button>
-    <button class="tab" data-tab="history">The Past</button>
-    <button class="tab" data-tab="log">Log</button>
-  </nav>
+  <div class="nav-wrap">
+    <nav class="tabs">
+      <button class="tab active" data-tab="helm">The Helm</button>
+      <button class="tab" data-tab="character">The Man</button>
+      <button class="tab" data-tab="loadout">Loadout</button>
+      <button class="tab" data-tab="people">Folk</button>
+      <button class="tab" data-tab="threads">Threads</button>
+      <button class="tab" data-tab="factions">Saltmarsh</button>
+      <button class="tab" data-tab="moments">Moments</button>
+      <button class="tab" data-tab="recaps">Recaps</button>
+    </nav>
+  </div>
 
-  <!-- THE MAN -->
-  <section class="panel active" id="character">
+  <!-- ================== THE HELM ================== -->
+  <section class="panel active" id="helm">
+
+    <!-- ASK THE TIDE — at the top -->
+    <div class="card">
+      <div class="card-title">Ask the Tide</div>
+      <div class="oracle-response" id="oracle-response"></div>
+      <div id="scene-input-wrap">
+        <textarea id="scene-input" rows="3" placeholder="What's happening at the table? Eda walks in. The captain wants you on a job. The party's planning something stupid."></textarea>
+        <button class="primary" id="ask-btn" onclick="askTheTide()">Ask the Tide</button>
+      </div>
+    </div>
+
+    <!-- Two columns: Combat + Threads/Moments -->
+    <div class="helm-grid">
+
+      <!-- LEFT: Combat -->
+      <div class="helm-block">
+        <div class="helm-block-title">Combat at a Glance</div>
+        <div class="combat-row">
+          <div class="combat-cell"><div class="combat-cell-label">HP</div><div class="combat-cell-val">16</div></div>
+          <div class="combat-cell"><div class="combat-cell-label">AC</div><div class="combat-cell-val">13</div></div>
+          <div class="combat-cell"><div class="combat-cell-label">Init</div><div class="combat-cell-val">+1</div></div>
+          <div class="combat-cell"><div class="combat-cell-label">Spd</div><div class="combat-cell-val">30</div></div>
+        </div>
+        <div class="save-row">
+          <div class="save-pill"><strong>STR</strong><span class="v">+5</span></div>
+          <div class="save-pill"><strong>DEX</strong><span class="v">+1</span></div>
+          <div class="save-pill"><strong>CON</strong><span class="v">+4</span></div>
+          <div class="save-pill"><strong>WIS</strong><span class="v">+2</span></div>
+          <div class="save-pill"><strong>PERC</strong><span class="v">+4</span></div>
+        </div>
+        <div class="helm-weapons-list">
+          <div class="helm-weapon-row">
+            <div><div class="name">Warhammer</div></div>
+            <div class="stats">+5 to hit · 1d8+3 / 1d10+3</div>
+          </div>
+          <div class="helm-weapon-row">
+            <div><div class="name">Handaxe ×4</div></div>
+            <div class="stats">+5 to hit · 1d6+3 (thrown 20/60)</div>
+          </div>
+          <div class="helm-weapon-row">
+            <div><div class="name">Dagger</div></div>
+            <div class="stats">+5 to hit · 1d4+3</div>
+          </div>
+          <div class="helm-weapon-row">
+            <div><div class="name">Unarmed</div></div>
+            <div class="stats">+5 to hit · 1d4+3 (Tavern Brawler)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Threads + Moments -->
+      <div>
+        <div class="helm-block">
+          <div class="helm-block-title">Hot Threads</div>
+          <div id="helm-threads" class="helm-list"><div class="helm-list-empty">Loading...</div></div>
+        </div>
+        <div class="helm-block" style="margin-top: 16px;">
+          <div class="helm-block-title">Recent Moments</div>
+          <div id="helm-moments" class="helm-list"><div class="helm-list-empty">No moments yet.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="helm-block" style="margin-top: 16px;">
+      <div class="helm-block-title">Resources</div>
+      <div id="resource-trackers"><div class="helm-list-empty">Loading...</div></div>
+      <button class="long-rest-btn" onclick="longRest()">⚓ Take a Long Rest</button>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="helm-block" style="margin-top: 16px;">
+      <div class="helm-block-title">Actions in His Pocket</div>
+      <div class="action-grid">
+        <div class="action-section">
+          <h4>Action</h4>
+          <ul>
+            <li><strong>Attack</strong> — weapon or unarmed</li>
+            <li><strong>Grapple</strong> — Athletics vs target's Athletics/Acrobatics</li>
+            <li><strong>Shove</strong> — push 5ft or knock prone (Athletics check)</li>
+            <li><strong>Dash</strong> · <strong>Dodge</strong> · <strong>Disengage</strong></li>
+            <li><strong>Hide</strong> · <strong>Help</strong> · <strong>Ready</strong> · <strong>Search</strong></li>
+            <li><strong>Use an Object</strong> — flask, rope, compass</li>
+          </ul>
+        </div>
+        <div class="action-section">
+          <h4>Bonus Action</h4>
+          <ul>
+            <li><strong>Rage</strong> — see resources above</li>
+            <li class="note">+2 dmg STR melee · adv on STR · resist b/p/s · 1 min</li>
+            <li><strong>Two-Weapon Fighting</strong> — strike or throw second handaxe</li>
+            <li><strong>Tavern Brawler Grapple</strong> — after unarmed/improvised hit</li>
+          </ul>
+          <h4 style="margin-top: 10px;">Reaction</h4>
+          <ul>
+            <li><strong>Opportunity Attack</strong> — when enemy leaves your reach</li>
+          </ul>
+        </div>
+      </div>
+      <div class="action-grid" style="margin-top: 12px;">
+        <div class="action-section">
+          <h4>Weapon Mastery (passive)</h4>
+          <ul>
+            <li><strong>Push</strong> (warhammer) — push Lg or smaller 10ft on hit</li>
+            <li><strong>Vex</strong> (handaxe) — advantage on next attack same target</li>
+          </ul>
+        </div>
+        <div class="action-section">
+          <h4>Background</h4>
+          <ul>
+            <li><strong>Ship's Passage</strong> — see resources above</li>
+            <li class="note">Free passage for you + 5 friends, 1/long rest</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK LOG -->
+    <div class="helm-block" style="margin-top: 16px;">
+      <div class="helm-block-title">Quick Log</div>
+      <div class="helm-quick-log">
+        <textarea id="helm-log-input" rows="1" placeholder="One-line note..."></textarea>
+        <button class="primary" onclick="addHelmLog()">Commit</button>
+      </div>
+      <div class="helm-recent-log" id="helm-recent-log"></div>
+    </div>
+
+  </section>
+
+  <!-- ================== THE MAN ================== -->
+  <section class="panel" id="character">
     <div class="grid-2">
       <div class="card">
         <div class="card-title">The Cut of Him</div>
@@ -984,10 +1369,41 @@
         <li><strong>Sleep.</strong> Never quite restful. Fog. Distant oars. A figure at the edge.</li>
       </ul>
     </div>
+
     <div class="flourish">⚓ ⁕ ⚓</div>
+
+    <!-- THE PAST folded into THE MAN -->
+    <div class="card">
+      <div class="card-title">A Boy on the Water</div>
+      <p>Born and raised in Saltmarsh, son of a dock laborer. Cy learned to row before he learned to read.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Cy &amp; Barker</div>
+      <p>Partnered with Douglas Barker. Started with a rowboat, worked up to a keelboat. Reliable. Practical. Well-liked among fishermen and working sailors.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Eda</div>
+      <p>A quiet thing with Eda Oweland through those years. Never public. It faded as her influence grew.</p>
+      <div class="pull-quote">She runs the Council now. They don't speak.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">The First Wreck — Twenty Years Ago</div>
+      <p>A galley wrecked offshore in unusual circumstances. Cy and Barker rowed out repeatedly through the night, saved roughly thirty crew. Local heroes.</p>
+      <p style="margin-top: 10px;">Some sailors spoke of strange fog. A vessel sighted before the wreck. The damage looked wrong. The stories were dismissed. He let it go.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">The Second Wreck — Ten Years Ago</div>
+      <p>Another ship. Same waters. The fog came in fast. Barker pushed ahead toward a drifting survivor. When Cy looked back, both were gone.</p>
+      <p>Barker was never found.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">The Dreams</div>
+      <p>Fog-bound waters. Distant oars. Barker at the edge — never close enough to speak. He calls it guilt.</p>
+      <div class="pull-quote">He may be wrong about what they are.</div>
+    </div>
   </section>
 
-  <!-- LOADOUT -->
+  <!-- ================== LOADOUT ================== -->
   <section class="panel" id="loadout">
     <div class="card">
       <div class="card-title">Combat at a Glance <span class="badge">Lv 1</span></div>
@@ -997,7 +1413,7 @@
         <div class="combat-stat"><div class="combat-label">Init</div><div class="combat-val">+1</div></div>
         <div class="combat-stat"><div class="combat-label">Speed</div><div class="combat-val">30</div></div>
       </div>
-      <p style="font-size: 0.85rem; color: var(--ink-faded); font-style: italic; margin-top: 4px;">HP from d12 + CON + Tough. AC from Unarmored Defense. Saves: STR +5, CON +4. Rage 2/long rest, +2 dmg, resistance to b/p/s while raging.</p>
+      <p style="font-size: 0.92rem; color: var(--ink-faded); font-style: italic; margin-top: 4px;">HP from d12 + CON + Tough. AC from Unarmored Defense. Saves: STR +5, CON +4. Rage 2/long rest, +2 dmg, resistance to b/p/s while raging.</p>
     </div>
     <div class="card">
       <div class="card-title">Weapons</div>
@@ -1073,7 +1489,7 @@
     </div>
   </section>
 
-  <!-- FOLK -->
+  <!-- ================== FOLK ================== -->
   <section class="panel" id="people">
     <div class="card">
       <div class="card-title">The Folk in His Orbit</div>
@@ -1083,7 +1499,7 @@
     </div>
   </section>
 
-  <!-- THREADS -->
+  <!-- ================== THREADS ================== -->
   <section class="panel" id="threads">
     <div class="card">
       <div class="card-title">Open Threads</div>
@@ -1093,7 +1509,7 @@
     </div>
   </section>
 
-  <!-- SALTMARSH -->
+  <!-- ================== SALTMARSH ================== -->
   <section class="panel" id="factions">
     <div class="card">
       <div class="card-title">Where He Stands</div>
@@ -1107,33 +1523,16 @@
     </div>
   </section>
 
-  <!-- ASK THE TIDE — REORDERED: response on top, input below -->
-  <section class="panel" id="oracle">
-    <!-- Response area at the TOP -->
-    <div class="oracle-response" id="oracle-response"></div>
-
-    <!-- Input below -->
-    <div class="oracle-intro">
-      Tell the tide what's happening. Three responses will surface, each true to who Cy is. Click <strong>"This is what happened"</strong> on the one you took. <em>You're the Captain. The tide's just the first mate.</em>
-    </div>
-    <div class="card">
-      <div class="card-title">The Scene</div>
-      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">WHAT'S HAPPENING?</label>
-      <textarea id="scene-input" rows="4" placeholder="Eda Oweland is at the door of the Snapping Line. She wants to talk."></textarea>
-      <button class="primary" id="ask-btn" onclick="askTheTide()">Ask the Tide</button>
-    </div>
-  </section>
-
-  <!-- MOMENTS -->
+  <!-- ================== MOMENTS ================== -->
   <section class="panel" id="moments">
     <div class="card">
       <div class="card-title">Moments</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">What Cy actually did, when the tide was asked. These feed back into future suggestions — Cy stays continuous with his choices.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">What Cy actually did, when the tide was asked. These feed back into future suggestions.</p>
       <div id="moments-list"><div class="empty-state">No moments saved yet.</div></div>
     </div>
   </section>
 
-  <!-- RECAPS -->
+  <!-- ================== RECAPS ================== -->
   <section class="panel" id="recaps">
     <div class="card">
       <div class="card-title">New Recap</div>
@@ -1153,48 +1552,6 @@
     </div>
   </section>
 
-  <!-- THE PAST -->
-  <section class="panel" id="history">
-    <div class="card">
-      <div class="card-title">A Boy on the Water</div>
-      <p>Born and raised in Saltmarsh, son of a dock laborer. Cy learned to row before he learned to read.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">Cy &amp; Barker</div>
-      <p>Partnered with Douglas Barker. Started with a rowboat, worked up to a keelboat. Reliable. Practical. Well-liked among fishermen and working sailors.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">Eda</div>
-      <p>A quiet thing with Eda Oweland through those years. Never public. It faded as her influence grew.</p>
-      <div class="pull-quote">She runs the Council now. They don't speak.</div>
-    </div>
-    <div class="card">
-      <div class="card-title">The First Wreck — Twenty Years Ago</div>
-      <p>A galley wrecked offshore in unusual circumstances. Cy and Barker rowed out repeatedly through the night, saved roughly thirty crew. Local heroes.</p>
-      <p style="margin-top: 10px;">Some sailors spoke of strange fog. A vessel sighted before the wreck. The damage looked wrong. The stories were dismissed. He let it go.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">The Second Wreck — Ten Years Ago</div>
-      <p>Another ship. Same waters. The fog came in fast. Barker pushed ahead toward a drifting survivor. When Cy looked back, both were gone.</p>
-      <p>Barker was never found.</p>
-    </div>
-    <div class="card">
-      <div class="card-title">The Dreams</div>
-      <p>Fog-bound waters. Distant oars. Barker at the edge — never close enough to speak. He calls it guilt.</p>
-      <div class="pull-quote">He may be wrong about what they are.</div>
-    </div>
-  </section>
-
-  <!-- LOG -->
-  <section class="panel" id="log">
-    <div class="card">
-      <div class="card-title">Quick Log</div>
-      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">One-line notes during play.</p>
-      <textarea id="log-input" rows="2" placeholder="..."></textarea>
-      <button class="primary" onclick="addLogEntry()">Commit to the Page</button>
-      <div style="margin-top: 20px;" id="log-list"><div class="empty-state">No entries yet.</div></div>
-    </div>
-  </section>
 </div>
 
 <!-- DRAWERS -->
@@ -1280,10 +1637,7 @@
         return true;
       }
       return false;
-    } catch (e) {
-      console.error('Config load failed:', e);
-      return false;
-    }
+    } catch (e) { console.error('Config load failed:', e); return false; }
   }
 
   async function fetchAi(url, opts = {}) {
@@ -1310,16 +1664,9 @@
   }
 
   const state = {
-    npcs: [],
-    threads: [],
-    factions: [],
-    log: [],
-    recaps: [],
-    moments: [],
-    currentResponse: null, // current ask-the-tide response (scene + options + savedIndex)
-    editingNpcId: null,
-    editingThreadId: null,
-    editingFactionId: null,
+    npcs: [], threads: [], factions: [], log: [], recaps: [], moments: [], resources: [],
+    currentResponse: null,
+    editingNpcId: null, editingThreadId: null, editingFactionId: null,
     pendingRecap: null,
   };
 
@@ -1354,13 +1701,14 @@
     if (!supabase) { setStatus('Database not configured', 'error'); return; }
     setStatus('Syncing', 'syncing');
     try {
-      const [npcs, threads, factions, log, recaps, moments] = await Promise.all([
+      const [npcs, threads, factions, log, recaps, moments, resources] = await Promise.all([
         supabase.from('npcs').select('*').order('sort_order'),
         supabase.from('threads').select('*').order('sort_order'),
         supabase.from('factions').select('*').order('sort_order'),
         supabase.from('log_entries').select('*').order('entry_date', { ascending: false }).order('created_at', { ascending: false }),
         supabase.from('recaps').select('*').order('session_date', { ascending: false }),
         supabase.from('moments').select('*').order('created_at', { ascending: false }),
+        supabase.from('character_resources').select('*'),
       ]);
       state.npcs = npcs.data || [];
       state.threads = threads.data || [];
@@ -1368,6 +1716,7 @@
       state.log = log.data || [];
       state.recaps = recaps.data || [];
       state.moments = moments.data || [];
+      state.resources = resources.data || [];
       setStatus('Synced', '');
       renderAll();
     } catch (e) {
@@ -1378,14 +1727,134 @@
   }
 
   function renderAll() {
-    renderNpcs();
-    renderThreads();
-    renderFactions();
-    renderLog();
-    renderRecaps();
-    renderMoments();
+    renderNpcs(); renderThreads(); renderFactions(); renderLog(); renderRecaps(); renderMoments();
+    renderHelmThreads(); renderHelmMoments(); renderHelmLog(); renderResources();
   }
 
+  // === HELM RENDERS ===
+  function renderHelmThreads() {
+    const el = document.getElementById('helm-threads');
+    const hot = state.threads.filter(t => t.status === 'hot' || t.status === 'open').slice(0, 5);
+    if (hot.length === 0) {
+      el.innerHTML = '<div class="helm-list-empty">No threads in play.</div>';
+      return;
+    }
+    el.innerHTML = hot.map(t => `
+      <div class="helm-list-item">
+        <div class="name">${escapeHtml(t.title)} <span style="font-family: 'Special Elite', monospace; font-size: 0.75rem; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em;">[${escapeHtml(t.status)}]</span></div>
+      </div>`).join('');
+  }
+
+  function renderHelmMoments() {
+    const el = document.getElementById('helm-moments');
+    const recent = state.moments.slice(0, 4);
+    if (recent.length === 0) {
+      el.innerHTML = '<div class="helm-list-empty">No moments yet.</div>';
+      return;
+    }
+    el.innerHTML = recent.map(m => {
+      const dateStr = new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const note = m.what_happened ? ` — <em>${escapeHtml(m.what_happened)}</em>` : '';
+      return `<div class="helm-list-item">
+        <div class="name">${escapeHtml(m.chosen_label)}</div>
+        <div class="meta">${escapeHtml(dateStr)}${note}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderHelmLog() {
+    const el = document.getElementById('helm-recent-log');
+    const recent = state.log.slice(0, 5);
+    if (recent.length === 0) {
+      el.innerHTML = '';
+      return;
+    }
+    el.innerHTML = recent.map(e => `
+      <div class="helm-recent-log-entry">
+        <span class="date">${escapeHtml(e.entry_date)}</span>${escapeHtml(e.text)}
+      </div>`).join('');
+  }
+
+  function renderResources() {
+    const el = document.getElementById('resource-trackers');
+    if (state.resources.length === 0) {
+      el.innerHTML = '<div class="helm-list-empty">Loading resources...</div>';
+      return;
+    }
+    el.innerHTML = state.resources.map(r => {
+      let pips = '';
+      for (let i = 0; i < r.max; i++) {
+        const isUsed = i < r.used;
+        pips += `<button class="resource-pip ${isUsed ? 'used' : ''}" data-key="${escapeHtml(r.key)}" data-index="${i}" aria-label="${isUsed ? 'restore' : 'use'} ${escapeHtml(r.label)}"></button>`;
+      }
+      const remaining = r.max - r.used;
+      return `<div class="resource-row">
+        <div class="resource-name">${escapeHtml(r.label)}</div>
+        <div class="resource-pips">${pips}</div>
+        <div class="resource-count">${remaining}/${r.max}</div>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('.resource-pip').forEach(btn => {
+      btn.addEventListener('click', () => toggleResource(btn.dataset.key));
+    });
+  }
+
+  async function toggleResource(key) {
+    const r = state.resources.find(x => x.key === key);
+    if (!r) return;
+    // If any unused, mark next one used. If all used, reset all.
+    let newUsed;
+    if (r.used >= r.max) {
+      newUsed = 0;
+    } else {
+      newUsed = r.used + 1;
+    }
+    setStatus('Saving', 'syncing');
+    try {
+      const { error } = await supabase.from('character_resources').update({ used: newUsed }).eq('key', key);
+      if (error) throw error;
+      r.used = newUsed;
+      renderResources();
+      setStatus('Synced', '');
+    } catch (e) {
+      console.error(e);
+      showToast('Save failed: ' + e.message, true);
+    }
+  }
+
+  window.longRest = async function() {
+    if (!confirm('Take a long rest? Resets all daily resources.')) return;
+    setStatus('Resting', 'syncing');
+    try {
+      const updates = state.resources.filter(r => r.reset_on === 'long_rest' || r.reset_on === 'short_rest' || r.reset_on === 'daily');
+      for (const r of updates) {
+        await supabase.from('character_resources').update({ used: 0 }).eq('key', r.key);
+        r.used = 0;
+      }
+      renderResources();
+      setStatus('Synced', '');
+      showToast('Rested. Resources reset.');
+    } catch (e) {
+      showToast('Failed: ' + e.message, true);
+    }
+  };
+
+  window.addHelmLog = async function() {
+    const text = document.getElementById('helm-log-input').value.trim();
+    if (!text) return;
+    try {
+      const { error } = await supabase.from('log_entries').insert({ text });
+      if (error) throw error;
+      document.getElementById('helm-log-input').value = '';
+      const { data } = await supabase.from('log_entries').select('*').order('entry_date', { ascending: false }).order('created_at', { ascending: false });
+      state.log = data || [];
+      renderHelmLog();
+      renderLog();
+      showToast('Logged');
+    } catch (e) { showToast('Failed: ' + e.message, true); }
+  };
+
+  // === STANDARD RENDERS (other tabs) ===
   function renderNpcs() {
     const tagLabels = { avoid: 'Avoiding', owe: 'Owes Them', owed: 'Owed', ally: 'Ally', cold: 'Cold', complicated: 'Complicated', dead: 'Lost' };
     const list = document.getElementById('npc-list');
@@ -1429,13 +1898,7 @@
   }
 
   function renderLog() {
-    const list = document.getElementById('log-list');
-    if (state.log.length === 0) { list.innerHTML = '<div class="empty-state">No entries yet.</div>'; return; }
-    list.innerHTML = state.log.map(e => `
-      <div class="log-entry">
-        <div class="log-date">${escapeHtml(e.entry_date)}</div>
-        <div class="log-text">${escapeHtml(e.text)}</div>
-      </div>`).join('');
+    // (Log is now part of Helm but legacy renderer kept in case)
   }
 
   function renderRecaps() {
@@ -1470,7 +1933,7 @@
     list.querySelectorAll('.moment-delete').forEach(el => el.addEventListener('click', () => deleteMoment(el.dataset.id)));
   }
 
-  // ===== Ask the Tide =====
+  // === ASK THE TIDE ===
   window.askTheTide = async function() {
     const scene = document.getElementById('scene-input').value.trim();
     if (!scene) return;
@@ -1490,20 +1953,17 @@
       }
       const data = await r.json();
       state.currentResponse = {
-        scene,
-        options: data.options,
-        cost: data._meta?.cost,
-        cached: data._meta?.cached,
+        scene, options: data.options,
+        cost: data._meta?.cost, cached: data._meta?.cached,
         savedIndex: null,
       };
       renderCurrentResponse();
-      // Scroll to top of response
       out.scrollIntoView({ behavior: 'smooth', block: 'start' });
       refreshSpendIndicator();
     } catch (e) {
       console.error(e);
-      out.innerHTML = `<div class="card" style="border-color: var(--blood);">
-        <div class="card-title" style="color: var(--blood);">The tide pulled back</div>
+      out.innerHTML = `<div style="border: 1px solid var(--blood); padding: 14px; background: rgba(107,31,21,0.08);">
+        <div style="font-family: 'IM Fell English SC', serif; color: var(--blood); margin-bottom: 6px;">The tide pulled back</div>
         <p>${escapeHtml(e.message || 'Unknown error.')}</p>
       </div>`;
     } finally {
@@ -1528,8 +1988,6 @@
       const classes = ['response-option', `option-${i+1}`];
       if (isChosen) classes.push('chosen');
       if (isDimmed) classes.push('dimmed');
-
-      // Render lines array (the new headline format)
       const linesArr = Array.isArray(o.lines) && o.lines.length > 0 ? o.lines : (o.text ? [o.text] : []);
       const linesHtml = linesArr.map(line => {
         const trimmed = (line || '').trim();
@@ -1537,9 +1995,7 @@
         const cls = isDialogue ? 'dialogue' : 'action';
         return `<div class="response-line ${cls}">${escapeHtml(trimmed)}</div>`;
       }).join('');
-
       const textHtml = o.text ? `<div class="response-text">${escapeHtml(o.text)}</div>` : '';
-
       return `
         <div class="${classes.join(' ')}" data-i="${i}">
           <div class="response-label">${escapeHtml(o.label)}</div>
@@ -1582,21 +2038,15 @@
     if (!state.currentResponse || !supabase) return;
     const { scene, options } = state.currentResponse;
     const opt = options[i];
-    // Combine lines + text for the saved record so future Ask the Tide context has the full picture
     const linesPart = Array.isArray(opt.lines) && opt.lines.length > 0
-      ? opt.lines.join(' / ')
-      : '';
+      ? opt.lines.join(' / ') : '';
     const fullText = linesPart && opt.text
-      ? `${linesPart}\n\n${opt.text}`
-      : (linesPart || opt.text || '');
+      ? `${linesPart}\n\n${opt.text}` : (linesPart || opt.text || '');
     setStatus('Saving moment', 'syncing');
     try {
       const { error } = await supabase.from('moments').insert({
-        scene,
-        chosen_label: opt.label,
-        chosen_text: fullText,
-        chosen_cost: opt.cost,
-        what_happened: whatHappened || null,
+        scene, chosen_label: opt.label, chosen_text: fullText,
+        chosen_cost: opt.cost, what_happened: whatHappened || null,
       });
       if (error) throw error;
       state.currentResponse.savedIndex = i;
@@ -1605,6 +2055,7 @@
       const { data } = await supabase.from('moments').select('*').order('created_at', { ascending: false });
       state.moments = data || [];
       renderMoments();
+      renderHelmMoments();
       setStatus('Synced', '');
       showToast('Moment saved');
     } catch (e) {
@@ -1621,14 +2072,13 @@
       if (error) throw error;
       state.moments = state.moments.filter(m => m.id !== id);
       renderMoments();
+      renderHelmMoments();
       showToast('Removed');
-    } catch (e) {
-      showToast('Delete failed: ' + e.message, true);
-    }
+    } catch (e) { showToast('Delete failed: ' + e.message, true); }
   }
   window.deleteMoment = deleteMoment;
 
-  // ===== NPC drawer =====
+  // === DRAWERS (npc, thread, faction) ===
   window.openNpcDrawer = function(id) {
     state.editingNpcId = id || null;
     document.getElementById('npc-drawer-title').textContent = id ? 'Edit Soul' : 'Add a Soul';
@@ -1651,7 +2101,6 @@
     if (!name) return;
     const tag = document.getElementById('npc-tag').value;
     const detail = document.getElementById('npc-detail').value.trim();
-    setStatus('Saving', 'syncing');
     try {
       if (state.editingNpcId) {
         const { error } = await supabase.from('npcs').update({ name, tag, detail }).eq('id', state.editingNpcId);
@@ -1678,7 +2127,6 @@
     } catch (e) { showToast('Delete failed: ' + e.message, true); }
   };
 
-  // ===== Thread drawer =====
   window.openThreadDrawer = function(id) {
     state.editingThreadId = id || null;
     document.getElementById('thread-drawer-title').textContent = id ? 'Edit Thread' : 'Add a Thread';
@@ -1727,7 +2175,6 @@
     } catch (e) { showToast('Delete failed: ' + e.message, true); }
   };
 
-  // ===== Faction drawer =====
   window.openFactionDrawer = function(id) {
     state.editingFactionId = id;
     const f = state.factions.find(x => x.id === id);
@@ -1750,20 +2197,7 @@
     } catch (e) { showToast('Save failed: ' + e.message, true); }
   };
 
-  // ===== Log =====
-  window.addLogEntry = async function() {
-    const text = document.getElementById('log-input').value.trim();
-    if (!text) return;
-    try {
-      const { error } = await supabase.from('log_entries').insert({ text });
-      if (error) throw error;
-      document.getElementById('log-input').value = '';
-      await loadAll();
-      showToast('Logged');
-    } catch (e) { showToast('Failed: ' + e.message, true); }
-  };
-
-  // ===== Recap =====
+  // === RECAP ===
   window.processRecap = async function() {
     const notes = document.getElementById('recap-notes').value.trim();
     const sessionNumber = parseInt(document.getElementById('recap-num').value) || null;
@@ -1811,7 +2245,7 @@
       ${(u.new_npcs?.length || u.npc_changes?.length || u.new_threads?.length || u.thread_changes?.length) ? `
       <div class="card">
         <div class="card-title">Suggested Updates</div>
-        <p style="font-style: italic; color: var(--ink-faded); font-size: 0.9rem; margin-bottom: 12px;">Tick the ones you want applied.</p>
+        <p style="font-style: italic; color: var(--ink-faded); font-size: 1rem; margin-bottom: 12px;">Tick the ones you want applied.</p>
         ${(u.new_npcs || []).map((n, i) => `
           <label class="update-checkbox">
             <input type="checkbox" data-type="new_npc" data-i="${i}" checked />
@@ -1848,11 +2282,8 @@
     setStatus('Saving', 'syncing');
     try {
       const { error: recapErr } = await supabase.from('recaps').insert({
-        session_number: r.sessionNumber,
-        session_date: r.sessionDate,
-        raw_notes: r.notes,
-        recap_text: r.recap,
-        highlights: r.highlights || null,
+        session_number: r.sessionNumber, session_date: r.sessionDate,
+        raw_notes: r.notes, recap_text: r.recap, highlights: r.highlights || null,
       });
       if (recapErr) throw recapErr;
       for (const c of checks) {
@@ -1889,7 +2320,7 @@
     document.getElementById('recap-pending').innerHTML = '';
   };
 
-  // ===== Init =====
+  // === INIT ===
   document.getElementById('recap-date').value = new Date().toISOString().split('T')[0];
 
   (async () => {
