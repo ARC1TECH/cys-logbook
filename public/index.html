@@ -13,7 +13,8 @@
     --paper-dark: #d4c19a;
     --paper-shadow: #b89f73;
     --ink: #2a1f15;
-    --ink-faded: #5c4a37;
+    --ink-faded: #4a3a2a;
+    --ink-soft: #6b5944;
     --rust: #8b3a2a;
     --brass: #a87932;
     --brass-bright: #c9963f;
@@ -28,6 +29,7 @@
 
   body {
     font-family: 'IM Fell English', serif;
+    font-size: 17px;
     background:
       radial-gradient(ellipse at 20% 10%, rgba(139,58,42,0.08), transparent 50%),
       radial-gradient(ellipse at 80% 90%, rgba(44,74,82,0.12), transparent 50%),
@@ -66,8 +68,8 @@
     background: rgba(232,217,184,0.95);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--paper-shadow);
-    padding: 6px 14px;
-    font-size: 0.78rem;
+    padding: 8px 14px;
+    font-size: 0.88rem;
     color: var(--ink-faded);
     font-family: 'Special Elite', monospace;
     display: flex;
@@ -156,7 +158,7 @@
   .meta-line {
     margin-top: 14px;
     display: flex; gap: 18px; flex-wrap: wrap;
-    font-size: 0.88rem;
+    font-size: 1rem;
     color: var(--ink-faded);
     justify-content: center;
   }
@@ -166,7 +168,7 @@
     font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
   }
 
   nav.tabs {
@@ -181,7 +183,7 @@
   .tab {
     background: none; border: none;
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     color: var(--ink-faded);
     padding: 12px 16px;
     cursor: pointer;
@@ -193,7 +195,7 @@
     flex-shrink: 0;
   }
   @media (min-width: 768px) {
-    .tab { font-size: 1rem; padding: 12px 22px; letter-spacing: 0.08em; }
+    .tab { font-size: 1.12rem; padding: 12px 22px; letter-spacing: 0.08em; }
   }
   .tab:hover { color: var(--ink); }
   .tab.active { color: var(--ink); border-bottom-color: var(--rust); }
@@ -217,7 +219,7 @@
 
   .card-title {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.92rem;
+    font-size: 1.1rem;
     letter-spacing: 0.1em;
     color: var(--rust);
     margin-bottom: 14px;
@@ -228,13 +230,13 @@
   }
   .card-title .badge {
     font-family: 'Special Elite', monospace;
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     background: var(--ink); color: var(--paper);
     padding: 2px 8px;
     letter-spacing: 0.05em;
   }
-  .card p { line-height: 1.6; margin-bottom: 8px; font-size: 1rem; }
-  .card ul { margin-left: 18px; line-height: 1.7; }
+  .card p { line-height: 1.6; margin-bottom: 8px; font-size: 1.05rem; }
+  .card ul { margin-left: 18px; line-height: 1.7; font-size: 1.05rem; }
   .card li { margin-bottom: 6px; }
 
   .stats {
@@ -250,12 +252,12 @@
   }
   .stat-name {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     letter-spacing: 0.08em;
     color: var(--ink-faded);
   }
-  .stat-val { font-family: 'Special Elite', monospace; font-size: 1.4rem; color: var(--ink); margin: 2px 0; }
-  .stat-mod { font-size: 0.78rem; color: var(--rust); }
+  .stat-val { font-family: 'Special Elite', monospace; font-size: 1.6rem; color: var(--ink); margin: 2px 0; }
+  .stat-mod { font-size: 0.92rem; color: var(--rust); }
 
   .combat-grid {
     display: grid;
@@ -272,14 +274,14 @@
   }
   .combat-label {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.68rem;
+    font-size: 0.82rem;
     letter-spacing: 0.08em;
     color: var(--ink-faded);
     text-transform: uppercase;
   }
   .combat-val {
     font-family: 'Special Elite', monospace;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: var(--rust);
     margin-top: 4px;
   }
@@ -298,29 +300,29 @@
   }
   .weapon-name {
     font-family: 'IM Fell English SC', serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     letter-spacing: 0.04em;
   }
-  .weapon-detail { font-size: 0.82rem; color: var(--ink-faded); font-style: italic; margin-top: 2px; }
-  .weapon-stat { font-family: 'Special Elite', monospace; font-size: 0.92rem; color: var(--rust); text-align: right; white-space: nowrap; }
-  .weapon-stat-label { font-size: 0.62rem; color: var(--ink-faded); letter-spacing: 0.08em; text-transform: uppercase; }
+  .weapon-detail { font-size: 0.95rem; color: var(--ink-soft); font-style: italic; margin-top: 2px; }
+  .weapon-stat { font-family: 'Special Elite', monospace; font-size: 1.05rem; color: var(--rust); text-align: right; white-space: nowrap; }
+  .weapon-stat-label { font-size: 0.72rem; color: var(--ink-faded); letter-spacing: 0.08em; text-transform: uppercase; }
 
   .skill-list { display: grid; grid-template-columns: 1fr; gap: 6px; }
   @media (min-width: 600px) { .skill-list { grid-template-columns: repeat(2, 1fr); } }
   .skill {
     display: flex;
     justify-content: space-between;
-    padding: 6px 12px;
+    padding: 8px 12px;
     background: rgba(255,253,245,0.3);
     border-left: 2px solid var(--brass);
-    font-size: 0.92rem;
+    font-size: 1.02rem;
   }
   .skill-mod { font-family: 'Special Elite', monospace; color: var(--rust); }
 
-  .gear-list { font-size: 0.92rem; line-height: 1.8; }
+  .gear-list { font-size: 1.02rem; line-height: 1.8; }
   .gear-list strong {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     letter-spacing: 0.08em;
     color: var(--rust);
     text-transform: uppercase;
@@ -343,11 +345,11 @@
     display: flex; justify-content: space-between; align-items: baseline;
     margin-bottom: 4px; gap: 10px; flex-wrap: wrap;
   }
-  .npc-name { font-family: 'IM Fell English SC', serif; font-size: 1.05rem; letter-spacing: 0.04em; }
+  .npc-name { font-family: 'IM Fell English SC', serif; font-size: 1.18rem; letter-spacing: 0.04em; }
   .npc-tag {
     font-family: 'Special Elite', monospace;
-    font-size: 0.66rem;
-    padding: 2px 8px;
+    font-size: 0.78rem;
+    padding: 3px 10px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -358,7 +360,7 @@
   .tag-cold { background: var(--ink-faded); color: var(--paper); }
   .tag-dead { background: var(--ink); color: var(--paper); }
   .tag-complicated { background: var(--brine); color: var(--paper); }
-  .npc-detail { font-size: 0.92rem; color: var(--ink-faded); font-style: italic; line-height: 1.5; }
+  .npc-detail { font-size: 1rem; color: var(--ink-faded); font-style: italic; line-height: 1.5; }
 
   .faction {
     padding: 14px 16px;
@@ -366,11 +368,11 @@
     margin-bottom: 10px;
     background: rgba(255,253,245,0.3);
   }
-  .faction-name { font-family: 'IM Fell English SC', serif; font-size: 1.02rem; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .faction-name { font-family: 'IM Fell English SC', serif; font-size: 1.15rem; letter-spacing: 0.06em; margin-bottom: 4px; }
   .standing { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
   .standing-bar { flex: 1; height: 6px; background: var(--paper-shadow); position: relative; }
   .standing-fill { height: 100%; background: linear-gradient(90deg, var(--rust), var(--brass)); transition: width 0.3s; }
-  .standing-label { font-family: 'Special Elite', monospace; font-size: 0.75rem; color: var(--ink-faded); min-width: 80px; text-align: right; }
+  .standing-label { font-family: 'Special Elite', monospace; font-size: 0.9rem; color: var(--ink-faded); min-width: 80px; text-align: right; }
 
   .thread {
     padding: 14px 14px 14px 38px;
@@ -387,18 +389,18 @@
     position: absolute;
     left: 12px; top: 12px;
     color: var(--rust);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
-  .thread-title { font-family: 'IM Fell English SC', serif; font-size: 1rem; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .thread-title { font-family: 'IM Fell English SC', serif; font-size: 1.15rem; letter-spacing: 0.04em; margin-bottom: 4px; }
   .thread-status {
     font-family: 'Special Elite', monospace;
-    font-size: 0.66rem;
+    font-size: 0.78rem;
     color: var(--rust);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 6px;
   }
-  .thread-detail { font-size: 0.92rem; line-height: 1.5; color: var(--ink-faded); font-style: italic; }
+  .thread-detail { font-size: 1rem; line-height: 1.5; color: var(--ink-faded); font-style: italic; }
 
   /* === ORACLE — UPDATED FOR PROMINENCE === */
   .oracle-intro {
@@ -409,8 +411,10 @@
     padding: 14px 18px;
     border-left: 3px solid var(--rust);
     background: rgba(139,58,42,0.05);
-    font-size: 0.95rem;
+    font-size: 1.05rem;
   }
+  /* Hide intro once a response is showing — keeps screen tight at the table */
+  .oracle-response:not(:empty) ~ .oracle-intro { display: none; }
 
   textarea, input, select {
     width: 100%;
@@ -418,7 +422,7 @@
     border: 1px solid var(--paper-shadow);
     padding: 12px 14px;
     font-family: 'IM Fell English', serif;
-    font-size: 1rem;
+    font-size: 1.08rem;
     color: var(--ink);
     resize: vertical;
     -webkit-appearance: none;
@@ -432,7 +436,7 @@
 
   button.primary {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.92rem;
+    font-size: 1rem;
     letter-spacing: 0.1em;
     background: var(--ink);
     color: var(--paper);
@@ -469,29 +473,29 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
     border-bottom: 1px dashed var(--paper-shadow);
   }
   .response-meta-scene {
     flex: 1;
     font-style: italic;
-    color: var(--ink-faded);
-    font-size: 0.92rem;
-    line-height: 1.4;
+    color: var(--ink);
+    font-size: 1.05rem;
+    line-height: 1.5;
     padding-right: 14px;
   }
   .response-meta-cost {
     font-family: 'Special Elite', monospace;
-    font-size: 0.74rem;
+    font-size: 0.85rem;
     color: var(--ink-faded);
     white-space: nowrap;
   }
 
   .response-option {
     border: 1px solid var(--paper-shadow);
-    padding: 20px 22px;
-    margin-bottom: 14px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
     background: rgba(255,253,245,0.5);
     position: relative;
     border-left: 5px solid var(--brass);
@@ -514,10 +518,10 @@
 
   .response-label {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.92rem;
+    font-size: 1.08rem;
     letter-spacing: 0.1em;
-    color: var(--rust);
-    margin-bottom: 14px;
+    color: var(--ink);
+    margin-bottom: 12px;
     text-transform: uppercase;
     padding-bottom: 8px;
     border-bottom: 1px dashed var(--paper-shadow);
@@ -525,34 +529,30 @@
   .response-option.chosen .response-label { color: var(--brass-bright); }
 
   /* Lines — the prominent headline. What Cy says or does. */
-  .response-lines {
-    margin-bottom: 14px;
-  }
+  .response-lines { margin-bottom: 10px; }
   .response-line {
-    font-size: 1.2rem;
-    line-height: 1.5;
+    font-size: 1.18rem;
+    line-height: 1.45;
     color: var(--ink);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     font-family: 'IM Fell English', serif;
   }
   .response-line:last-child { margin-bottom: 0; }
-  .response-line.dialogue {
-    font-style: normal;
-  }
+  .response-line.dialogue { font-style: normal; }
   .response-line.action {
     font-style: italic;
-    color: var(--ink-faded);
+    color: var(--ink-soft);
     font-size: 1.1rem;
   }
 
-  /* Text — the prose context, demoted */
+  /* Text — the prose context, demoted but still readable */
   .response-text {
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px dashed var(--paper-shadow);
-    line-height: 1.6;
-    font-size: 0.92rem;
-    color: var(--ink-faded);
+    line-height: 1.55;
+    font-size: 1rem;
+    color: var(--ink-soft);
     font-style: italic;
   }
 
@@ -561,7 +561,7 @@
     padding-top: 10px;
     border-top: 1px dashed var(--paper-shadow);
     font-style: italic;
-    font-size: 0.88rem;
+    font-size: 0.98rem;
     color: var(--ink-faded);
   }
   .response-cost::before {
@@ -570,13 +570,13 @@
     font-weight: normal;
     font-style: normal;
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.74rem;
+    font-size: 0.82rem;
     letter-spacing: 0.08em;
   }
 
   .response-actions {
-    margin-top: 14px;
-    padding-top: 12px;
+    margin-top: 12px;
+    padding-top: 10px;
     border-top: 1px dashed var(--paper-shadow);
     display: flex;
     align-items: center;
@@ -590,9 +590,9 @@
     border: 1px solid var(--brass);
     color: var(--brass);
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.78rem;
+    font-size: 0.88rem;
     letter-spacing: 0.08em;
-    padding: 6px 14px;
+    padding: 7px 14px;
     cursor: pointer;
     transition: all 0.2s;
     -webkit-appearance: none;
@@ -607,11 +607,9 @@
     flex-direction: column;
   }
   @media (min-width: 600px) { .happened-form { flex-direction: row; align-items: center; } }
-  .happened-form input {
-    flex: 1; padding: 8px 12px; font-size: 0.92rem;
-  }
+  .happened-form input { flex: 1; padding: 8px 12px; font-size: 1rem; }
   .happened-form button {
-    padding: 8px 16px; font-size: 0.78rem;
+    padding: 8px 16px; font-size: 0.85rem;
     font-family: 'IM Fell English SC', serif;
     letter-spacing: 0.08em;
     cursor: pointer;
@@ -625,13 +623,13 @@
   .saved-indicator {
     color: var(--brass-bright);
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.78rem;
+    font-size: 0.92rem;
     letter-spacing: 0.08em;
   }
   .saved-note {
     color: var(--ink-faded);
     font-style: italic;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     flex: 1;
   }
 
@@ -666,9 +664,9 @@
     gap: 8px;
     margin-bottom: 10px;
   }
-  .recap-session { font-family: 'IM Fell English SC', serif; font-size: 1.05rem; letter-spacing: 0.06em; }
-  .recap-date { font-family: 'Special Elite', monospace; font-size: 0.8rem; color: var(--ink-faded); }
-  .recap-text { line-height: 1.65; font-size: 0.96rem; white-space: pre-wrap; }
+  .recap-session { font-family: 'IM Fell English SC', serif; font-size: 1.18rem; letter-spacing: 0.06em; }
+  .recap-date { font-family: 'Special Elite', monospace; font-size: 0.9rem; color: var(--ink-faded); }
+  .recap-text { line-height: 1.65; font-size: 1.05rem; white-space: pre-wrap; }
   .recap-highlights {
     margin-top: 12px;
     padding-top: 12px;
@@ -676,7 +674,7 @@
     font-style: italic;
     color: var(--ink-faded);
     white-space: pre-wrap;
-    font-size: 0.92rem;
+    font-size: 1rem;
     line-height: 1.6;
   }
 
@@ -691,7 +689,7 @@
     cursor: pointer;
   }
   .update-checkbox input[type="checkbox"] { width: auto; margin-top: 4px; cursor: pointer; }
-  .update-checkbox-label { flex: 1; font-size: 0.9rem; line-height: 1.4; }
+  .update-checkbox-label { flex: 1; font-size: 1rem; line-height: 1.5; }
 
   /* Moments */
   .moment-card {
@@ -703,14 +701,14 @@
   }
   .moment-date {
     font-family: 'Special Elite', monospace;
-    font-size: 0.74rem;
+    font-size: 0.85rem;
     color: var(--ink-faded);
     margin-bottom: 6px;
   }
   .moment-scene {
     font-style: italic;
-    color: var(--ink-faded);
-    font-size: 0.92rem;
+    color: var(--ink);
+    font-size: 1.02rem;
     line-height: 1.5;
     margin-bottom: 12px;
     padding-bottom: 10px;
@@ -718,14 +716,14 @@
   }
   .moment-label {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     letter-spacing: 0.08em;
     color: var(--brass-bright);
     text-transform: uppercase;
     margin-bottom: 8px;
   }
   .moment-text {
-    font-size: 1rem;
+    font-size: 1.08rem;
     line-height: 1.65;
     margin-bottom: 10px;
   }
@@ -733,12 +731,12 @@
     margin-top: 12px;
     padding-top: 10px;
     border-top: 1px dashed var(--paper-shadow);
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--ink);
   }
   .moment-happened strong {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     letter-spacing: 0.08em;
     color: var(--rust);
     text-transform: uppercase;
@@ -753,7 +751,7 @@
     background: transparent;
     border: none;
     color: var(--ink-faded);
-    font-size: 0.78rem;
+    font-size: 0.88rem;
     cursor: pointer;
     font-family: 'IM Fell English SC', serif;
     letter-spacing: 0.06em;
@@ -765,12 +763,12 @@
   .log-entry:last-child { border-bottom: none; }
   .log-date {
     font-family: 'Special Elite', monospace;
-    font-size: 0.74rem;
+    font-size: 0.85rem;
     color: var(--rust);
     letter-spacing: 0.06em;
     margin-bottom: 4px;
   }
-  .log-text { line-height: 1.6; font-size: 0.95rem; }
+  .log-text { line-height: 1.6; font-size: 1.05rem; }
 
   /* Drawer */
   .drawer-bg {
@@ -804,7 +802,7 @@
   .drawer label {
     display: block;
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.74rem;
+    font-size: 0.85rem;
     letter-spacing: 0.08em;
     color: var(--ink-faded);
     margin: 12px 0 4px;
@@ -816,12 +814,12 @@
     background: transparent;
     border: 1px dashed var(--ink-faded);
     color: var(--ink-faded);
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     cursor: pointer;
     font-family: 'IM Fell English SC', serif;
     letter-spacing: 0.08em;
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin-top: 8px;
     transition: all 0.2s;
     -webkit-appearance: none;
@@ -843,6 +841,7 @@
     padding: 8px 14px;
     margin: 12px 0;
     line-height: 1.6;
+    font-size: 1.05rem;
   }
 
   .possession {
@@ -854,13 +853,13 @@
   }
   .possession-name {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.98rem;
+    font-size: 1.08rem;
     letter-spacing: 0.04em;
     color: var(--ink);
     margin-bottom: 4px;
   }
   .possession-meaning {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--ink-faded);
     font-style: italic;
     line-height: 1.5;
@@ -876,7 +875,7 @@
     padding: 12px 22px;
     font-family: 'IM Fell English SC', serif;
     letter-spacing: 0.08em;
-    font-size: 0.88rem;
+    font-size: 1rem;
     z-index: 200;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     opacity: 0;
@@ -896,6 +895,7 @@
     padding: 30px 20px;
     color: var(--ink-faded);
     font-style: italic;
+    font-size: 1.05rem;
   }
 </style>
 </head>
@@ -905,7 +905,7 @@
   <div class="status-bar">
     <span><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></span>
     <span style="display: flex; gap: 14px; align-items: center;">
-      <span id="spend-indicator" style="font-size: 0.74rem; color: var(--ink-faded);">—</span>
+      <span id="spend-indicator" style="font-size: 0.85rem; color: var(--ink-faded);">—</span>
       <a href="/api/export-context" target="_blank" style="color: var(--ink-faded); text-decoration: none; border-bottom: 1px dotted;">Export</a>
     </span>
   </div>
@@ -1031,8 +1031,8 @@
         <div class="skill"><span>Investigation (INT)</span><span class="skill-mod">+1</span></div>
         <div class="skill"><span>Perception (WIS)</span><span class="skill-mod">+4</span></div>
       </div>
-      <p style="margin-top: 12px; font-size: 0.92rem;"><strong>Tools:</strong> Navigator's Tools</p>
-      <p style="font-size: 0.92rem;"><strong>Languages:</strong> Common, Goblin, Elvish</p>
+      <p style="margin-top: 12px; font-size: 1rem;"><strong>Tools:</strong> Navigator's Tools</p>
+      <p style="font-size: 1rem;"><strong>Languages:</strong> Common, Goblin, Elvish</p>
     </div>
     <div class="card">
       <div class="card-title">Gear</div>
@@ -1045,7 +1045,7 @@
     </div>
     <div class="card">
       <div class="card-title">Personal Possessions</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Things that aren't gear. Things that <em>mean</em> something.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">Things that aren't gear. Things that <em>mean</em> something.</p>
       <div class="possession">
         <div class="possession-name">Douglas Barker's compass</div>
         <div class="possession-meaning">Carried since the night he didn't come back. <em>It always seems to know when bad weather is coming.</em></div>
@@ -1077,7 +1077,7 @@
   <section class="panel" id="people">
     <div class="card">
       <div class="card-title">The Folk in His Orbit</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Tap a name to edit.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">Tap a name to edit.</p>
       <div id="npc-list"><div class="empty-state">Loading...</div></div>
       <button class="add-btn" onclick="openNpcDrawer()">+ add a soul</button>
     </div>
@@ -1087,7 +1087,7 @@
   <section class="panel" id="threads">
     <div class="card">
       <div class="card-title">Open Threads</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Things unresolved. Things he's running from.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">Things unresolved. Things he's running from.</p>
       <div id="thread-list"><div class="empty-state">Loading...</div></div>
       <button class="add-btn" onclick="openThreadDrawer()">+ add a thread</button>
     </div>
@@ -1097,7 +1097,7 @@
   <section class="panel" id="factions">
     <div class="card">
       <div class="card-title">Where He Stands</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Tap to adjust lean.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">Tap to adjust lean.</p>
       <div id="faction-list"><div class="empty-state">Loading...</div></div>
     </div>
     <div class="card">
@@ -1118,7 +1118,7 @@
     </div>
     <div class="card">
       <div class="card-title">The Scene</div>
-      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">WHAT'S HAPPENING?</label>
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">WHAT'S HAPPENING?</label>
       <textarea id="scene-input" rows="4" placeholder="Eda Oweland is at the door of the Snapping Line. She wants to talk."></textarea>
       <button class="primary" id="ask-btn" onclick="askTheTide()">Ask the Tide</button>
     </div>
@@ -1128,7 +1128,7 @@
   <section class="panel" id="moments">
     <div class="card">
       <div class="card-title">Moments</div>
-      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">What Cy actually did, when the tide was asked. These feed back into future suggestions — Cy stays continuous with his choices.</p>
+      <p style="margin-bottom: 14px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">What Cy actually did, when the tide was asked. These feed back into future suggestions — Cy stays continuous with his choices.</p>
       <div id="moments-list"><div class="empty-state">No moments saved yet.</div></div>
     </div>
   </section>
@@ -1137,12 +1137,12 @@
   <section class="panel" id="recaps">
     <div class="card">
       <div class="card-title">New Recap</div>
-      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">Paste your raw notes from the session. Get back a clean recap and suggested updates.</p>
-      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">SESSION #</label>
+      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">Paste your raw notes from the session. Get back a clean recap and suggested updates.</p>
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin-bottom: 6px;">SESSION #</label>
       <input id="recap-num" type="number" placeholder="1" style="max-width: 100px;" />
-      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">DATE</label>
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">DATE</label>
       <input id="recap-date" type="date" style="max-width: 200px;" />
-      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.74rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">RAW NOTES</label>
+      <label style="font-family: 'IM Fell English SC', serif; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--ink-faded); display: block; margin: 12px 0 6px;">RAW NOTES</label>
       <textarea id="recap-notes" rows="8" placeholder="What happened? Who showed up? What did Cy do?"></textarea>
       <button class="primary" id="recap-btn" onclick="processRecap()">Distill the Session</button>
       <div id="recap-pending" style="margin-top: 20px;"></div>
@@ -1189,7 +1189,7 @@
   <section class="panel" id="log">
     <div class="card">
       <div class="card-title">Quick Log</div>
-      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 0.92rem;">One-line notes during play.</p>
+      <p style="margin-bottom: 12px; font-style: italic; color: var(--ink-faded); font-size: 1rem;">One-line notes during play.</p>
       <textarea id="log-input" rows="2" placeholder="..."></textarea>
       <button class="primary" onclick="addLogEntry()">Commit to the Page</button>
       <div style="margin-top: 20px;" id="log-list"><div class="empty-state">No entries yet.</div></div>
