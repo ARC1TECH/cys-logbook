@@ -24,7 +24,6 @@ const supabase = createClient(
 );
 
 // === The "constitution" — Cy's unchanging core. Cached. ===
-// This is identical on every call, so it benefits hugely from prompt caching.
 const CY_CORE = `Captain Silas Pike, "Cy". 55 years old. 6'7", 325 lb. Mottled, leathered skin. Piercing black eyes. Dark hair gone grey at the temples.
 
 Human Barbarian (Path of the Berserker at level 3), Sailor background. Saltmarsh local — born and raised, son of a dock laborer who spent more time on the water than ashore.
@@ -77,6 +76,8 @@ For each scene, return EXACTLY three response options as JSON. Each option must 
 
 The three options should genuinely differ — not three flavors of the same thing. Show Cy's range: the bitter loner, the reluctant hero, the man who still feels things he won't admit. One should usually be the "harder right" choice he'd resist; one the "easier wrong" he'd be tempted by; one a third path that sidesteps both.
 
+Don't always reach for the same physical anchors. The compass, the wooden animals, the flask, and the chart case are meaningful, but they shouldn't appear in every scene. Use them when they earn the moment. Sometimes Cy just stands there, or his hands stay where they are.
+
 DIALOGUE STYLE when Cy speaks:
 - Short. Often a single sentence. Sometimes just a noise — a grunt, a "mm," a "huh."
 - Plain words. He doesn't use ten dollars where a nickel does.
@@ -87,7 +88,7 @@ DIALOGUE STYLE when Cy speaks:
 Return ONLY valid JSON in this exact shape, no preamble, no markdown fences:
 {"options":[{"label":"...","text":"...","cost":"..."},{"label":"...","text":"...","cost":"..."},{"label":"...","text":"...","cost":"..."}]}`;
 
-// Build the live context (changes per call, can't be cached as effectively)
+// Build the live context (changes per call)
 async function buildLiveContext() {
   const [npcsRes, threadsRes, factionsRes] = await Promise.all([
     supabase.from('npcs').select('*').order('sort_order'),
@@ -115,6 +116,7 @@ FACTION STANDINGS:
 ${factionLines}`;
 }
 
+// Recent recaps for session continuity
 async function buildRecapContext() {
   const { data } = await supabase
     .from('recaps')
@@ -130,12 +132,30 @@ async function buildRecapContext() {
     .join('\n\n');
 }
 
+// Recent moments — what Cy actually did when the tide was asked before
+async function buildMomentsContext() {
+  const { data } = await supabase
+    .from('moments')
+    .select('scene, chosen_label, chosen_text, what_happened, created_at')
+    .order('created_at', { ascending: false })
+    .limit(8);
+
+  if (!data || data.length === 0) return '';
+
+  return 'RECENT MOMENTS — what Cy actually did when scenes like this came up before. Stay continuous with these:\n\n' + data
+    .reverse()
+    .map(m => {
+      const happened = m.what_happened ? `\nWhat actually happened: ${m.what_happened}` : '';
+      return `Scene: ${m.scene}\nCy's response (${m.chosen_label}): ${m.chosen_text}${happened}`;
+    })
+    .join('\n\n---\n\n');
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // === Run all guards before doing anything expensive ===
   const blocked = await gate(req, 'ask');
   if (blocked) {
     return res.status(blocked.status || 403).json({
@@ -154,20 +174,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Scene too long (max 4000 characters)' });
     }
 
-    // Build live context in parallel
-    const [liveContext, recapContext] = await Promise.all([
+    const [liveContext, recapContext, momentsContext] = await Promise.all([
       buildLiveContext(),
       buildRecapContext(),
+      buildMomentsContext(),
     ]);
 
-    // === Use prompt caching ===
-    // The system prompt is split into parts:
-    //   1. CY_CORE (large, never changes) — cache_control on this
-    //   2. TASK_INSTRUCTIONS (medium, never changes) — cache_control on this
-    //   3. Live context (changes per session) — not cached
-    //   4. Recap context (changes after each session) — not cached
-    //
-    // Cached portions cost 90% less on subsequent calls within ~5 minutes.
+    const dynamicContext = [liveContext, recapContext, momentsContext]
+      .filter(Boolean)
+      .join('\n\n');
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5',
@@ -185,17 +200,15 @@ export default async function handler(req, res) {
         },
         {
           type: 'text',
-          text: liveContext + (recapContext ? '\n\n' + recapContext : ''),
+          text: dynamicContext,
         },
       ],
       messages: [{ role: 'user', content: `SCENE AT THE TABLE:\n${scene}` }],
     });
 
-    // Calculate and log cost
     const cost = calculateCost(response.usage);
     await logUsage('ask', response.usage, cost);
 
-    // Parse Claude's response
     const text = response.content
       .map(c => (c.type === 'text' ? c.text : ''))
       .join('')
