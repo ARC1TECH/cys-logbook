@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -725,7 +726,7 @@
   .thread-detail { font-size: 1.05rem; line-height: 1.55; color: var(--ink-faded); font-style: italic; font-family: var(--font-narrative); }
 
   /* Forms / inputs */
-  textarea, input, select {
+  textarea, input:not([type="checkbox"]):not([type="radio"]), select {
     width: 100%;
     background: rgba(255,253,245,0.5);
     border: 1px solid var(--paper-shadow);
@@ -737,7 +738,7 @@
     -webkit-appearance: none;
     border-radius: 0;
   }
-  textarea:focus, input:focus, select:focus {
+  textarea:focus, input:not([type="checkbox"]):not([type="radio"]):focus, select:focus {
     outline: none;
     border-color: var(--rust);
     background: rgba(255,253,245,0.8);
@@ -990,15 +991,61 @@
   .update-checkbox {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
     margin: 8px 0;
-    padding: 10px 12px;
+    padding: 12px 14px;
     background: rgba(255,253,245,0.3);
     border-left: 2px solid var(--seafoam);
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
   }
-  .update-checkbox input[type="checkbox"] { width: auto; margin-top: 4px; cursor: pointer; }
-  .update-checkbox-label { flex: 1; font-size: 1rem; line-height: 1.5; }
+  .update-checkbox:hover {
+    background: rgba(255,253,245,0.55);
+    border-left-color: var(--rust);
+  }
+  .update-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin: 2px 0 0 0;
+    padding: 0;
+    background: rgba(255,253,245,0.6);
+    border: 2px solid var(--ink-faded);
+    border-radius: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .update-checkbox input[type="checkbox"]:hover {
+    border-color: var(--rust);
+  }
+  .update-checkbox input[type="checkbox"]:checked {
+    background: var(--rust);
+    border-color: var(--rust);
+  }
+  .update-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .update-checkbox input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--brass-bright);
+    outline-offset: 2px;
+  }
+  /* When checked, the whole row also styles up */
+  .update-checkbox:has(input:checked) {
+    background: rgba(139,58,42,0.08);
+    border-left-color: var(--rust);
+  }
+  .update-checkbox-label { flex: 1; font-size: 1rem; line-height: 1.55; }
 
   /* Moments */
   .moment-card {
